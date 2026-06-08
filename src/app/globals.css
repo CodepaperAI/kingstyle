@@ -398,6 +398,7 @@ button {
 }
 
 .hero-sequence-hero,
+.fly-cloud-backdrop,
 .fly-panel,
 .fly-panel-frame,
 .fly-title,
@@ -406,8 +407,59 @@ button {
   will-change: transform, opacity;
 }
 
+.fly-cloud-backdrop {
+  contain: paint;
+  background:
+    radial-gradient(
+      ellipse at 28% 18%,
+      rgb(190 196 198 / 0.26) 0%,
+      rgb(226 228 226 / 0.22) 24%,
+      rgb(255 255 255 / 0) 48%
+    ),
+    radial-gradient(
+      ellipse at 70% 42%,
+      rgb(176 182 183 / 0.2) 0%,
+      rgb(225 227 225 / 0.2) 28%,
+      rgb(255 255 255 / 0) 56%
+    ),
+    radial-gradient(
+      ellipse at 46% 82%,
+      rgb(187 193 192 / 0.18) 0%,
+      rgb(234 234 230 / 0.22) 26%,
+      rgb(255 255 255 / 0) 58%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f8f8f5 48%, #ffffff 100%);
+}
+
+.fly-cloud-backdrop::before,
+.fly-cloud-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  background:
+    radial-gradient(ellipse at 38% 35%, rgb(121 128 130 / 0.08), transparent 46%),
+    radial-gradient(ellipse at 62% 64%, rgb(142 149 150 / 0.08), transparent 52%);
+  opacity: 0.72;
+  transform: translateZ(0);
+}
+
+.fly-cloud-backdrop::after {
+  transform: rotate(180deg) scale(1.08);
+  opacity: 0.44;
+}
+
 .fly-panel {
   transform-origin: center;
+  backface-visibility: hidden;
+  contain: paint;
+}
+
+.fly-panel-frame,
+.fly-video,
+.fly-title,
+.fly-card {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 .moodboard-move,

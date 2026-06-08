@@ -5,6 +5,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -684,6 +685,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
       if (imageLayer) {
         imageLayer.filterArea = app.screen;
       }
+      app.render();
     };
 
     const syncFilters = () => {
@@ -738,6 +740,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
       ripple.filter.scale.x = 0;
       ripple.filter.scale.y = 0;
       syncFilters();
+      app?.ticker.start();
     };
 
     const handlePointerMove = (event: PointerEvent) => {
@@ -924,8 +927,14 @@ function HeroWaterCanvas({ image }: { image: string }) {
 
         if (changedActiveState) {
           syncFilters();
+          if (activeFilterCount === 0) {
+            pixiApp.render();
+            pixiApp.ticker.stop();
+          }
         }
       });
+      pixiApp.render();
+      pixiApp.ticker.stop();
 
       resizeObserver = new ResizeObserver(fitHeroSprite);
       resizeObserver.observe(host);
@@ -1242,7 +1251,7 @@ function FlyThroughSection({
       id="fly-through"
       className={
         isHandoff
-          ? "fly-panel pointer-events-none absolute inset-0 z-40 overflow-hidden bg-amali-dark text-white"
+          ? "fly-panel pointer-events-none absolute inset-0 z-40 overflow-hidden bg-white text-amali-dark opacity-0"
           : "relative h-[245svh] overflow-visible bg-white text-amali-dark"
       }
     >
@@ -1253,23 +1262,41 @@ function FlyThroughSection({
             : "sticky top-0 h-svh min-h-[620px]"
         }`}
       >
-        <div className="absolute left-1/2 top-1/2 aspect-square w-[170vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(218,208,193,0.55)_0%,rgba(255,255,255,0)_64%)]" />
-        <img
-          src={`${ASSET_BASE}/uploads/2025/04/4dfe4c0468a937bf2545685b9b6f3f49-1.png`}
-          alt=""
-          aria-hidden
-          className="cloud-a absolute -left-[15vw] top-[10vh] w-[72vw] opacity-10 md:w-[50vw]"
+        <div
+          className={
+            isHandoff
+              ? "fly-cloud-backdrop absolute inset-0 z-0"
+              : "absolute left-1/2 top-1/2 aspect-square w-[170vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(218,208,193,0.55)_0%,rgba(255,255,255,0)_64%)]"
+          }
         />
         <img
           src={`${ASSET_BASE}/uploads/2025/04/4dfe4c0468a937bf2545685b9b6f3f49-1.png`}
           alt=""
           aria-hidden
-          className="cloud-b absolute -right-[28vw] bottom-[8vh] w-[90vw] -scale-x-100 opacity-10 md:w-[58vw]"
+          loading="eager"
+          decoding="async"
+          className={
+            isHandoff
+              ? "cloud-a absolute -left-[18vw] -top-[6vh] z-10 w-[102vw] opacity-[0.18] md:w-[74vw]"
+              : "cloud-a absolute -left-[15vw] top-[10vh] w-[72vw] opacity-10 md:w-[50vw]"
+          }
+        />
+        <img
+          src={`${ASSET_BASE}/uploads/2025/04/4dfe4c0468a937bf2545685b9b6f3f49-1.png`}
+          alt=""
+          aria-hidden
+          loading="eager"
+          decoding="async"
+          className={
+            isHandoff
+              ? "cloud-b absolute -right-[24vw] bottom-[-10vh] z-10 w-[110vw] -scale-x-100 opacity-[0.2] md:w-[82vw]"
+              : "cloud-b absolute -right-[28vw] bottom-[8vh] w-[90vw] -scale-x-100 opacity-10 md:w-[58vw]"
+          }
         />
         <div
           className={`fly-title absolute left-1/2 z-40 w-[86%] max-w-[980px] -translate-x-1/2 -translate-y-1/2 text-center ${
             isHandoff
-              ? "top-[47%] text-white drop-shadow-[0_16px_48px_rgba(0,0,0,0.45)]"
+              ? "top-[47%] text-amali-dark/55"
               : "top-[42%] text-amali-dark"
           }`}
         >
@@ -1277,7 +1304,7 @@ function FlyThroughSection({
             step into a reality that transcends
             <span
               className={`fly-title-script font-script relative block text-[48px] normal-case leading-none tracking-normal md:text-[102px] lg:text-[128px] ${
-                isHandoff ? "text-[#d8bf7d]" : "-z-10 text-[#b19056]"
+                isHandoff ? "text-[#b19056]" : "-z-10 text-[#b19056]"
               }`}
             >
               Luxury
@@ -1295,13 +1322,15 @@ function FlyThroughSection({
             src={`${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`}
             alt=""
             aria-hidden
-            className={`fill-media opacity-100 ${isHandoff ? "scale-[1.04]" : ""}`}
+            loading="eager"
+            decoding="async"
+            className={`fly-video-poster fill-media z-10 opacity-100 ${isHandoff ? "scale-[1.04]" : ""}`}
           />
           <video
-            className="fly-video-element fill-media opacity-100"
+            className="fly-video-element fill-media z-20 opacity-100"
             muted
             playsInline
-            autoPlay={isHandoff}
+            autoPlay={false}
             loop
             preload="auto"
             poster={`${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`}
@@ -1314,12 +1343,18 @@ function FlyThroughSection({
           <div
             className={
               isHandoff
-                ? "absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/45"
-                : "absolute inset-0 bg-black/5"
+                ? "absolute inset-0 z-30 bg-gradient-to-b from-black/20 via-black/5 to-black/45"
+                : "absolute inset-0 z-30 bg-black/5"
             }
           />
         </div>
-        <div className="fly-card absolute bottom-6 left-5 right-5 z-50 max-w-[530px] rounded-[10px] bg-amali-dark/78 px-7 py-7 text-white shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-[15px] md:bottom-10 md:left-10 md:right-auto md:px-12 md:py-11">
+        <div
+          className={`fly-card absolute bottom-6 left-5 right-5 z-50 max-w-[530px] rounded-[10px] bg-amali-dark/78 px-7 py-7 text-white md:bottom-10 md:left-10 md:right-auto md:px-12 md:py-11 ${
+            isHandoff
+              ? "shadow-[0_18px_46px_rgba(0,0,0,0.22)]"
+              : "shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-[15px]"
+          }`}
+        >
           <h2 className="mb-3 text-[28px] font-light uppercase leading-[0.94] tracking-[1.02px] md:text-[34px]">
             Spirited serenity, artisanal intention
           </h2>
@@ -1335,11 +1370,242 @@ function FlyThroughSection({
 }
 
 function HeroFlySequence() {
+  const sequenceRef = useRef<HTMLDivElement | null>(null);
+  const pinRef = useRef<HTMLDivElement | null>(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(media.matches);
+
+    update();
+    media.addEventListener("change", update);
+
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (reducedMotion) return;
+
+    const sequence = sequenceRef.current;
+    const pin = pinRef.current;
+    if (!sequence || !pin) return;
+
+    const video = sequence.querySelector<HTMLVideoElement>(".fly-video-element");
+    let handoffTimeline: gsap.core.Timeline | null = null;
+    let handoffTrigger: ScrollTrigger | null = null;
+    let videoActive = false;
+
+    const setVideoActive = (active: boolean, reset = false) => {
+      if (!video) return;
+      if (videoActive === active) {
+        if (!active && reset) video.currentTime = 0;
+        return;
+      }
+
+      videoActive = active;
+      if (active) {
+        video.play().catch(() => {});
+        return;
+      }
+
+      video.pause();
+      if (reset) video.currentTime = 0;
+    };
+
+    const ctx = gsap.context(() => {
+      gsap.set(".hero-sequence-hero", {
+        autoAlpha: 1,
+        scale: 1,
+        transformOrigin: "50% 50%",
+      });
+      gsap.set(".fly-panel", {
+        autoAlpha: 0,
+        scale: 0.16,
+        force3D: true,
+        transformOrigin: "50% 50%",
+      });
+      gsap.set(".fly-panel-frame", {
+        scale: 1.12,
+        force3D: true,
+        transformOrigin: "50% 50%",
+      });
+      gsap.set(".fly-video", {
+        autoAlpha: 0,
+        scale: 0.16,
+        y: 0,
+        force3D: true,
+        transformOrigin: "50% 50%",
+      });
+      gsap.set(".fly-video-poster", {
+        autoAlpha: 0,
+        scale: 1,
+      });
+      gsap.set(".fly-video-element", {
+        autoAlpha: 1,
+        scale: 1,
+      });
+      gsap.set(".fly-title", {
+        autoAlpha: 0,
+        scale: 0.68,
+        y: 58,
+        force3D: true,
+        transformOrigin: "50% 50%",
+      });
+      gsap.set(".fly-card", {
+        autoAlpha: 0,
+        scale: 0.98,
+        y: 54,
+        force3D: true,
+      });
+
+      handoffTimeline = gsap
+        .timeline({
+          defaults: { ease: "none" },
+          paused: true,
+        })
+        .to(
+          ".fly-panel",
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.5,
+          },
+          0.04,
+        )
+        .to(
+          ".fly-panel-frame",
+          {
+            scale: 1,
+            duration: 0.56,
+          },
+          0.04,
+        )
+        .to(
+          ".hero-sequence-hero",
+          {
+            opacity: 0.18,
+            scale: 1.06,
+            duration: 0.58,
+          },
+          0,
+        )
+        .to(
+          ".fly-video",
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.26,
+          },
+          0.78,
+        )
+        .to(
+          ".fly-title",
+          {
+            autoAlpha: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.24,
+          },
+          0.14,
+        )
+        .to(
+          ".fly-title",
+          {
+            scale: 1.34,
+            y: "-6vh",
+            duration: 0.34,
+          },
+          0.34,
+        )
+        .to(
+          ".fly-title",
+          {
+            autoAlpha: 0,
+            y: "-12vh",
+            duration: 0.16,
+          },
+          0.66,
+        )
+        .to(
+          ".fly-card",
+          {
+            autoAlpha: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.22,
+          },
+          0.9,
+        );
+    }, sequence);
+
+    const getProgress = () => {
+      const start = sequence.offsetTop;
+      const distance = Math.max(1, sequence.offsetHeight - window.innerHeight);
+      return gsap.utils.clamp(0, 1, (window.scrollY - start) / distance);
+    };
+
+    const updateProgress = () => {
+      const progress = getProgress();
+      handoffTimeline?.progress(progress);
+      setVideoActive(progress >= 0.7, progress < 0.08);
+    };
+
+    const refresh = () => {
+      ScrollTrigger.refresh();
+      updateProgress();
+    };
+
+    handoffTrigger = ScrollTrigger.create({
+      trigger: sequence,
+      start: "top top",
+      end: "bottom bottom",
+      invalidateOnRefresh: true,
+      onRefresh: updateProgress,
+      onUpdate: (self) => {
+        handoffTimeline?.progress(self.progress);
+        setVideoActive(self.progress >= 0.7, self.progress < 0.08);
+      },
+    });
+    updateProgress();
+    const refreshTimeout = window.setTimeout(refresh, 350);
+    window.addEventListener("resize", refresh);
+    window.addEventListener("load", refresh);
+
+    return () => {
+      window.clearTimeout(refreshTimeout);
+      window.removeEventListener("resize", refresh);
+      window.removeEventListener("load", refresh);
+      handoffTrigger?.kill();
+      setVideoActive(false, true);
+      ctx.revert();
+    };
+  }, [reducedMotion]);
+
+  if (reducedMotion) {
+    return (
+      <>
+        <HomeHero />
+        <FlyThroughSection />
+      </>
+    );
+  }
+
   return (
-    <>
-      <HomeHero />
-      <FlyThroughSection />
-    </>
+    <div
+      ref={sequenceRef}
+      className="hero-fly-sequence relative h-[250svh] bg-amali-dark"
+    >
+      <div
+        ref={pinRef}
+        className="hero-fly-pin sticky top-0 h-svh min-h-[620px] overflow-hidden"
+      >
+        <div className="hero-sequence-hero absolute inset-0 z-10 will-change-transform">
+          <HomeHero />
+        </div>
+        <FlyThroughSection mode="handoff" />
+      </div>
+    </div>
   );
 }
 
