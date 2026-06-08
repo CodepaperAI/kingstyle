@@ -30,18 +30,18 @@ const FLY_THROUGH_VIDEO = "/amali-fly-through.mp4";
 const villaGalleryImages = [
   {
     src: "/amali-villa-evening-front.jpeg",
-    alt: "Illuminated modern white villa exterior at dusk",
+    alt: "Illuminated modern white home exterior at dusk",
   },
   {
     src: "/amali-villa-evening-entrance.jpeg",
-    alt: "Modern villa facade with arched windows illuminated at dusk",
+    alt: "Modern home facade with arched windows illuminated at dusk",
   },
 ];
 
 const homeSlides = [
   {
-    label: "Villa",
-    cta: "Discover Villa Living",
+    label: "Homes",
+    cta: "Explore Home Designs",
     href: "https://amaliproperties.com/the-villas/",
     image: HERO_IMAGE,
   },
@@ -73,71 +73,71 @@ const visionImages = [
 
 const teaserCards = [
   {
-    eyebrow: "Amali",
-    title: "Island",
+    eyebrow: "King Style Homes",
+    title: "Custom Builds",
     href: "https://amaliproperties.com/island/amali-island-welcome/",
     image: `${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`,
   },
   {
-    eyebrow: "Amali",
-    title: "Residences",
+    eyebrow: "King Style Homes",
+    title: "House & Land",
     href: "https://amaliproperties.com/residences/residences-teaser/",
     image: `${ASSET_BASE}/uploads/2026/02/View-8_Penthouse.jpg`,
   },
   {
-    eyebrow: "Amali",
-    title: "Villas",
+    eyebrow: "King Style Homes",
+    title: "Renovations",
     href: "https://amaliproperties.com/the-villas/",
     image: `${ASSET_BASE}/uploads/2025/08/CAM-3A_-1.png`,
   },
 ];
 
 const mapHotspots = [
-  { label: "Amali Island", left: "33%", top: "48%", align: "top" },
-  { label: "Amali Residences", left: "57%", top: "46%", align: "bottom" },
-  { label: "Boutique", left: "46%", top: "55%", align: "top" },
-  { label: "Amali Villas", left: "25%", top: "58%", align: "top" },
+  { label: "Display Centers", left: "33%", top: "48%", align: "top" },
+  { label: "Home Designs", left: "57%", top: "46%", align: "bottom" },
+  { label: "Inclusions", left: "46%", top: "55%", align: "top" },
+  { label: "Sydney Projects", left: "25%", top: "58%", align: "top" },
 ];
 
 const menuGroups = [
   {
-    label: "Residences",
+    label: "Home Designs",
     href: "https://amaliproperties.com/canal/",
     links: [
       {
-        label: "Exclusive preview",
+        label: "Explore our designs",
         href: "https://amaliproperties.com/residences/residences-teaser/",
       },
     ],
   },
   {
-    label: "Island",
+    label: "Services",
     href: "https://amaliproperties.com/island/",
     links: [
       {
-        label: "Welcome to Amali Island",
+        label: "Custom home builds",
         href: "https://amaliproperties.com/island/amali-island-welcome/",
       },
       {
-        label: "The Villas",
+        label: "House and land packages",
         href: "https://amaliproperties.com/island/island-villas/",
       },
       {
-        label: "Clubhouse",
+        label: "Renovations and extensions",
         href: "https://amaliproperties.com/island/clubhouse/",
       },
     ],
   },
   {
-    label: "Villas",
+    label: "Inclusions",
     href: "https://amaliproperties.com/the-villas/",
     links: [
       {
-        label: "Welcome to Amali Villas",
+        label: "Standard inclusions",
         href: "https://amaliproperties.com/the-villas/",
       },
       {
-        label: "Villa Elaine",
+        label: "Signature inclusions",
         href: "https://amaliproperties.com/bespoke-villa/villa-elaine/",
       },
     ],
@@ -146,9 +146,9 @@ const menuGroups = [
 
 const singleLinks = [
   { label: "Home", href: "https://amaliproperties.com/" },
-  { label: "About", href: "https://amaliproperties.com/about-amali/" },
-  { label: "Locations", href: "https://amaliproperties.com/locations/" },
-  { label: "Contact", href: "https://amaliproperties.com/contact/" },
+  { label: "About Us", href: "https://amaliproperties.com/about-amali/" },
+  { label: "Display Centers", href: "https://amaliproperties.com/locations/" },
+  { label: "Contact Us", href: "https://amaliproperties.com/contact/" },
 ];
 
 const jsonLd = {
@@ -158,17 +158,17 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": "https://amaliproperties.com/",
       url: "https://amaliproperties.com/",
-      name: "Home - Amali Properties",
+      name: "Home - King Style Homes",
       description:
-        "Amali is pioneering a new era of ultra-luxurious real estate to redefine luxury living, one dream at a time.",
-      inLanguage: "en-GB",
+        "King Style Homes designs and constructs custom homes that blend style, functionality, and exceptional craftsmanship.",
+      inLanguage: "en-AU",
       isPartOf: { "@id": "https://amaliproperties.com/#website" },
       thumbnailUrl: `${ASSET_BASE}/uploads/2026/03/View-8_Penthouse-1.jpg`,
     },
     {
       "@type": "Organization",
       "@id": "https://amaliproperties.com/#organization",
-      name: "Amali Island",
+      name: "King Style Homes",
       url: "https://amaliproperties.com/",
       logo: `${ASSET_BASE}/uploads/2025/11/Amali-brandmark.jpg`,
     },
@@ -238,16 +238,16 @@ function Logo({ dark = false }: { dark?: boolean }) {
       className={`focus-ring pointer-events-auto relative flex h-[58px] w-[132px] flex-col items-center justify-center text-center transition-colors duration-500 sm:w-[190px] ${
         dark ? "text-amali-dark" : "text-white"
       }`}
-      title="Amali Properties"
+      title="King Style Homes"
     >
       <span ref={lightRef} className="absolute inset-0 block opacity-0" />
       <span className="relative block text-[26px] font-light uppercase leading-none tracking-[9px] sm:text-[34px] sm:tracking-[12px]">
-        Amali
+        King
       </span>
       <span className="relative mt-2 block text-[7px] font-bold uppercase leading-none tracking-[4px] sm:text-[8px]">
-        Properties
+        Style Homes
       </span>
-      <span className="sr-only">Amali Properties</span>
+      <span className="sr-only">King Style Homes</span>
     </a>
   );
 }
@@ -364,7 +364,7 @@ function ArrowButton({
 
 function Header({ onRegister }: { onRegister: () => void }) {
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState("Residences");
+  const [expanded, setExpanded] = useState("Home Designs");
   const [onLightSection, setOnLightSection] = useState(false);
   const useDarkHeader = onLightSection && !open;
 
@@ -521,7 +521,7 @@ function Header({ onRegister }: { onRegister: () => void }) {
           <span className="flex size-10 items-center justify-center rounded-full border border-white">
             IG
           </span>
-          Amali Properties
+          King Style Homes
         </a>
       </nav>
     </>
@@ -1045,9 +1045,9 @@ function HomeHero() {
         }`}
       >
         <h1 className="max-w-[820px] text-[36px] font-light uppercase leading-[0.86] tracking-[0.8px] text-white sm:text-[42px] md:text-[72px] md:leading-[0.89] md:tracking-[2.16px]">
-          Redefining
+          Building
           <br />
-          luxury living
+          lasting homes
         </h1>
       </div>
 
@@ -1057,9 +1057,11 @@ function HomeHero() {
         }`}
       >
         <h2 className="hero-live-title max-w-[900px] text-[36px] font-light uppercase leading-[0.86] tracking-[0.8px] text-white sm:text-[42px] md:text-[72px] md:leading-[0.89] md:tracking-[2.16px]">
-          one dream
+          Quality.
           <br />
-          at a time
+          Style.
+          <br />
+          Excellence.
         </h2>
       </div>
 
@@ -1070,7 +1072,7 @@ function HomeHero() {
       >
         <div className="flex items-center gap-6">
           <p className="text-[16px] font-normal uppercase leading-none tracking-[1.6px] text-white">
-            Discover
+            Explore
           </p>
           <div className="relative flex overflow-hidden rounded-[10px] bg-white/5 px-2 backdrop-blur-[10px]">
             <span
@@ -1091,7 +1093,7 @@ function HomeHero() {
             ))}
           </div>
           <p className="text-[16px] font-normal uppercase leading-none tracking-[1.6px] text-white">
-            Living
+            Designs
           </p>
         </div>
       </div>
@@ -1314,13 +1316,13 @@ function FlyThroughSection({
           }`}
         >
           <p className="fly-title-main text-[30px] font-light uppercase leading-[0.86] tracking-[0.84px] md:text-[62px] md:leading-[0.94] md:tracking-[1.86px] lg:text-[76px] lg:tracking-[2.2px]">
-            step into a reality that transcends
+            custom homes shaped around
             <span
               className={`fly-title-script font-script relative block text-[48px] normal-case leading-none tracking-normal md:text-[102px] lg:text-[128px] ${
                 isHandoff ? "text-[#b19056]" : "-z-10 text-[#b19056]"
               }`}
             >
-              Luxury
+              You
             </span>
           </p>
         </div>
@@ -1369,12 +1371,14 @@ function FlyThroughSection({
           }`}
         >
           <h2 className="mb-3 text-[28px] font-light uppercase leading-[0.94] tracking-[1.02px] md:text-[34px]">
-            Spirited serenity, artisanal intention
+            Quality. Style.
+            <br />
+            Excellence.
           </h2>
           <p className="font-body text-[18px] font-normal leading-[25px] md:text-[21px] md:leading-[27px]">
-            Amali properties are designed to galvanise wellness, wonder and
-            connection. Curated materials play with natural forms, water dances
-            nearby and unrivalled amenities truly satiate every desire.
+            King Style Homes designs and constructs custom homes that balance
+            style, functionality and exceptional craftsmanship, turning your
+            vision into a refined, build-ready reality.
           </p>
         </div>
       </div>
@@ -1625,7 +1629,7 @@ function HeroFlySequence() {
 function VillaGallerySection() {
   return (
     <section
-      aria-label="Villa exterior gallery"
+      aria-label="Home exterior gallery"
       className="relative overflow-hidden bg-amali-sand pb-12 pt-16 text-amali-dark md:pb-20 md:pt-24"
     >
       <div className="amali-container">
@@ -1694,13 +1698,13 @@ function VisionSection() {
           </div>
           <div className="reveal-up col-span-12 md:col-span-7 md:pt-24">
             <h2 className="mb-4 max-w-[760px] text-[32px] font-light uppercase leading-none tracking-[1.32px] md:text-[44px] md:leading-[0.88]">
-              A vision crafted for exceptional living
+              Building homes, creating legacies
             </h2>
             <p className="font-body max-w-[720px] text-[20px] leading-[27px] md:text-[21px]">
-              Amali pioneers a new era of ultra-luxurious real estate, defined
-              by boutique, deeply personal living experiences. We harness the
-              power of design to create a canvas upon which clients curate
-              their ultimate lives.
+              King Style Homes creates spaces that go beyond walls and ceilings
+              to become the backdrop of cherished memories. With personalized
+              designs and meticulous craftsmanship, every home is shaped around
+              the families who live in it.
             </p>
           </div>
           <div className="reveal-up col-span-4 col-start-9 -mt-16 md:col-span-1 md:col-start-12 md:-mt-24">
@@ -1763,12 +1767,12 @@ function MapSection() {
       <div className="amali-container relative z-10 pt-12 md:pt-24">
         <div className="mx-auto max-w-[930px] text-left md:text-center">
           <h2 className="reveal-up mb-4 text-[30px] font-light uppercase leading-[1.04] tracking-[1.3px] md:text-[44px] lg:text-[62px] lg:leading-[0.84]">
-            In Dubai&apos;s most coveted locations
+            Built with local Sydney insight
           </h2>
           <p className="reveal-up font-body max-w-[760px] text-[18px] leading-[24px] md:mx-auto md:text-[21px] md:leading-[27px]">
-            Whether nestled on a private island, on the shores of endless waters
-            or soaring above urban streets, each Amali home is enviably situated
-            in one of the world&apos;s most iconic cities, Dubai.
+            Based in Sydney, King Style Homes understands local requirements,
+            communities and lifestyles, guiding every project from design
+            decisions through to a smooth handover.
           </p>
         </div>
       </div>
@@ -1802,27 +1806,27 @@ function TeasersSection() {
     >
       <div className="flex justify-center overflow-hidden pt-8 text-center md:pt-16">
         <p className="pointer-events-none text-[30vw] font-light uppercase leading-none opacity-10 md:text-[24vw]">
-          Amali
+          King Style Homes
         </p>
       </div>
       <div className="amali-container -mt-4 mb-10 md:-mt-8 md:mb-16">
         <div className="grid grid-cols-12 items-center gap-5">
           <div className="reveal-up col-span-12 md:col-span-7">
             <h2 className="text-[30px] font-light uppercase leading-[0.9] tracking-[0.9px] md:text-[44px] lg:text-[72px] lg:leading-[0.89]">
-              Luxury living
+              Home building
               <br />
-              <span className="font-normal">Redefined</span>
+              <span className="font-normal">With purpose</span>
             </h2>
           </div>
           <div className="reveal-up col-span-12 md:col-span-5 lg:col-span-4 lg:col-start-9">
             <p className="mb-5 text-[18px] font-light uppercase leading-[18px] tracking-[0.2px] lg:text-[20px] lg:leading-[20px]">
-              Discover how Amali is changing the narrative
+              Explore tailored services for every stage of your build
             </p>
             <ArrowButton
               tone="sand"
               href="https://amaliproperties.com/about-amali/"
             >
-              Our purpose
+              Build with us
             </ArrowButton>
           </div>
         </div>
@@ -1871,12 +1875,12 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
           <div className="lg:col-span-8">
             <div className="relative h-full lg:pl-12 after:absolute after:bottom-0 after:left-12 after:hidden after:h-px after:w-3/4 after:bg-white/10 lg:after:block">
               <p className="mb-6 text-[32px] font-light uppercase leading-none tracking-[2.1px] lg:text-[54px] lg:tracking-[2.7px]">
-                Register your
+                Build
                 <br />
-                interest
+                with us
               </p>
               <ArrowButton tone="slate" onClick={onRegister}>
-                Contact
+                Get in touch
               </ArrowButton>
             </div>
           </div>
@@ -1888,8 +1892,8 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
             </h2>
             <div>
               {[
-                ["About Amali", "https://amaliproperties.com/about-amali/"],
-                ["Contact", "https://amaliproperties.com/contact/"],
+                ["About Us", "https://amaliproperties.com/about-amali/"],
+                ["Get In Touch", "https://amaliproperties.com/contact/"],
               ].map(([label, href]) => (
                 <a
                   key={label}
@@ -1910,7 +1914,7 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
       </div>
       <div className="border-t border-white/20 px-7 pt-8 lg:px-14 lg:pt-0">
         <div className="flex flex-col items-center justify-between gap-5 text-center text-[13px] leading-none tracking-[0.64px] lg:flex-row lg:text-left">
-          <p>Amali Properties 2026. All rights reserved.</p>
+          <p>King Style Homes 2026. All rights reserved.</p>
           <div className="flex flex-col items-center gap-2 lg:flex-row lg:gap-5">
             <a href="https://amaliproperties.com/terms-conditions/">
               Terms &amp; Conditions
@@ -1979,7 +1983,7 @@ function RegisterModal({
       <div className="relative max-h-[90dvh] w-full max-w-[720px] overflow-auto rounded-[34px] bg-white px-7 py-9 text-amali-dark shadow-2xl sm:px-12 sm:py-12">
         <button
           type="button"
-          aria-label="Close register interest"
+          aria-label="Close enquiry form"
           onClick={handleClose}
           className="focus-ring absolute right-5 top-5 flex size-10 items-center justify-center rounded-full text-amali-gray transition-colors hover:bg-amali-dark hover:text-white"
         >
@@ -1987,16 +1991,16 @@ function RegisterModal({
         </button>
         <div className="max-w-[520px]">
           <p className="font-body mb-4 text-[13px] uppercase tracking-[1.6px] text-amali-slate">
-            Amali Properties
+            King Style Homes
           </p>
           <h2
             id="register-title"
             className="text-[32px] font-light uppercase leading-none tracking-[1.7px] sm:text-[42px]"
           >
-            Register Interest
+            Get In Touch
           </h2>
           <p className="font-body mt-5 text-[18px] font-light leading-[26px] text-amali-gray">
-            We&apos;d love to hear from you.
+            Tell us about the home you want to build.
           </p>
         </div>
 
@@ -2006,7 +2010,7 @@ function RegisterModal({
               Thank you
             </p>
             <p className="font-body mt-3 text-[17px] leading-7 text-amali-ink">
-              Your interest has been registered. This clone keeps the form
+              Your enquiry has been received. This clone keeps the form
               frontend-only for now.
             </p>
           </div>
@@ -2039,7 +2043,7 @@ function RegisterModal({
               className="focus-ring mt-8 inline-flex items-center gap-5 overflow-hidden rounded-full bg-amali-dark py-3 pl-8 pr-3 text-white transition-transform hover:scale-[1.02]"
             >
               <span className="text-[13px] uppercase tracking-[1.4px]">
-                Register your interest
+                Send enquiry
               </span>
               <span className="flex size-9 items-center justify-center rounded-full bg-amali-slate">
                 <ChevronRight aria-hidden className="size-4" />

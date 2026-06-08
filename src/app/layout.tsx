@@ -2,31 +2,31 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 const description =
-  "Amali is pioneering a new era of ultra-luxurious real estate to redefine luxury living, one dream at a time.";
+  "King Style Homes designs and constructs custom homes that blend style, functionality, and exceptional craftsmanship.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://amaliproperties.com"),
-  title: "Home - Amali Properties",
+  title: "Home - King Style Homes",
   description,
   openGraph: {
-    title: "Home - Amali Properties",
+    title: "Home - King Style Homes",
     description,
     url: "/",
-    siteName: "Amali Properties",
+    siteName: "King Style Homes",
     images: [
       {
         url: "https://amaliproperties.com/wp-content/uploads/2026/03/View-8_Penthouse-1.jpg",
         width: 912,
         height: 697,
-        alt: "Amali Properties luxury living",
+        alt: "King Style Homes custom home building",
       },
     ],
-    locale: "en_GB",
+    locale: "en_AU",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Home - Amali Properties",
+    title: "Home - King Style Homes",
     description,
     images: [
       "https://amaliproperties.com/wp-content/uploads/2026/03/View-8_Penthouse-1.jpg",
