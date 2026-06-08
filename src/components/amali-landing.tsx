@@ -2,13 +2,18 @@
 
 import {
   FormEvent,
-  PointerEvent as ReactPointerEvent,
   ReactNode,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from "react";
+import type {
+  Application as PixiApplication,
+  Container as PixiContainer,
+  DisplacementFilter as PixiDisplacementFilter,
+  Sprite as PixiSprite,
+} from "pixi.js";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import lottie, { AnimationItem } from "lottie-web";
@@ -17,25 +22,14 @@ import { ChevronRight, Volume2, VolumeX, X } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const ASSET_BASE = "https://amaliproperties.com/wp-content";
+const HERO_IMAGE = "/hero-villa-screenshot.png";
 
 const homeSlides = [
-  {
-    label: "Residences",
-    cta: "Discover Residences Living",
-    href: "https://amaliproperties.com/residences/exclusive-preview/",
-    image: `${ASSET_BASE}/uploads/2025/08/304c2ab2de0fb20c71345585eee16250.jpeg`,
-  },
-  {
-    label: "Island",
-    cta: "Discover Island Living",
-    href: "https://amaliproperties.com/island/amali-island-welcome/",
-    image: `${ASSET_BASE}/uploads/2025/08/e54dffaad952cc376cdfdedf6df45864-1-e1744725264808.jpeg`,
-  },
   {
     label: "Villa",
     cta: "Discover Villa Living",
     href: "https://amaliproperties.com/the-villas/",
-    image: `${ASSET_BASE}/uploads/2025/08/5ea51525d88392d94d0d5b6f5d62d01c.jpeg`,
+    image: HERO_IMAGE,
   },
 ];
 
@@ -544,299 +538,481 @@ function AudioToggle({ dark = false }: { dark?: boolean }) {
   );
 }
 
-function HomeHero() {
-  const [active, setActive] = useState(0);
-  const [introDone, setIntroDone] = useState(false);
-  const heroRef = useRef<HTMLElement | null>(null);
-  const cursorLayerRef = useRef<HTMLDivElement | null>(null);
-  const cursorTurbulenceRef = useRef<SVGFETurbulenceElement | null>(null);
-  const cursorNoiseOffsetRef = useRef<SVGFEOffsetElement | null>(null);
-  const cursorDisplacementRef =
-    useRef<SVGFEDisplacementMapElement | null>(null);
-  const cursorWaveRef = useRef({
-    dx: 0,
-    dy: 0,
-    frequencyX: 0.009,
-    frequencyY: 0.019,
-    scale: 22,
-  });
-  const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
-  const reducedMotionRef = useRef(false);
-  const activeSlide = homeSlides[active];
+function createFlowDisplacementMap(size = 512) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
 
-  const applyCursorWave = useCallback(() => {
-    const wave = cursorWaveRef.current;
-    cursorNoiseOffsetRef.current?.setAttribute("dx", wave.dx.toFixed(2));
-    cursorNoiseOffsetRef.current?.setAttribute("dy", wave.dy.toFixed(2));
-    cursorDisplacementRef.current?.setAttribute(
-      "scale",
-      wave.scale.toFixed(2),
-    );
-    cursorTurbulenceRef.current?.setAttribute(
-      "baseFrequency",
-      `${wave.frequencyX.toFixed(4)} ${wave.frequencyY.toFixed(4)}`,
-    );
-  }, []);
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  if (!context) return canvas;
 
-  const handlePointerMove = useCallback((event: ReactPointerEvent) => {
-    const section = heroRef.current;
-    const cursorLayer =
-      cursorLayerRef.current ??
-      section?.querySelector<HTMLElement>(".hero-cursor-effect");
-    if (!section || event.pointerType === "touch" || reducedMotionRef.current) {
-      return;
+  const imageData = context.createImageData(size, size);
+  const data = imageData.data;
+  const center = size / 2;
+
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const dx = (x - center) / center;
+      const dy = (y - center) / center;
+      const flowDistance = Math.abs(dx);
+      const crossDistance = Math.abs(dy);
+      const index = (y * size + x) * 4;
+
+      let offsetX = 0;
+      let offsetY = 0;
+
+      if (flowDistance < 0.98 && crossDistance < 0.72) {
+        const head = Math.max(0, 1 - Math.max(0, dx + 0.78) / 1.76);
+        const tail = Math.max(0, 1 - Math.max(0, -dx - 0.2) / 0.72);
+        const crossFalloff = Math.exp(-crossDistance * crossDistance * 9.4);
+        const flowFalloff = Math.exp(-flowDistance * flowDistance * 1.55);
+        const brokenEdge =
+          0.72 +
+          0.2 * Math.sin((dx + dy) * 13.5) +
+          0.08 * Math.sin((dx - dy) * 29);
+        const envelope =
+          Math.max(0, head * tail * crossFalloff * flowFalloff * brokenEdge);
+        const stream =
+          Math.sin(dx * 23 + Math.sin(dy * 10) * 1.2) * 0.58 +
+          Math.sin(dx * 41 - dy * 11) * 0.27 +
+          Math.sin((dx + dy) * 68) * 0.15;
+        const shear =
+          Math.sin(dx * 15 + dy * 24) * 0.48 +
+          Math.sin(dx * 37 - dy * 15) * 0.2;
+
+        offsetX = stream * envelope * 54;
+        offsetY = (shear * envelope + dy * envelope * 0.72) * 42;
+      }
+
+      data[index] = 128 + offsetX;
+      data[index + 1] = 128 + offsetY;
+      data[index + 2] = 128;
+      data[index + 3] = 255;
     }
+  }
 
-    const rect = section.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const last = lastPointerRef.current ?? { x, y };
-    const velocityX = x - last.x;
-    const velocityY = y - last.y;
-    const speed = Math.min(1, Math.hypot(velocityX, velocityY) / 58);
-    const normalX = x / rect.width - 0.5;
-    const normalY = y / rect.height - 0.5;
-    const angle = Math.atan2(velocityY, velocityX || 0.001) * (180 / Math.PI);
+  context.putImageData(imageData, 0, 0);
+  return canvas;
+}
 
-    lastPointerRef.current = { x, y };
-    section.classList.add("is-pointer-active");
+function createFlowHighlightMap(size = 512) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
 
-    const styleTarget = cursorLayer ?? section;
-    styleTarget.style.setProperty("opacity", "0.82");
-    styleTarget.style.setProperty("--hero-x", `${x}px`);
-    styleTarget.style.setProperty("--hero-y", `${y}px`);
-    styleTarget.style.setProperty("--hero-cursor-opacity", "0.82");
-    styleTarget.style.setProperty("--hero-caustic-opacity", "0.42");
-    styleTarget.style.setProperty(
-      "--hero-drift-x",
-      `${normalX * -34 + velocityX * 0.2}px`,
-    );
-    styleTarget.style.setProperty(
-      "--hero-drift-y",
-      `${normalY * -24 + velocityY * 0.2}px`,
-    );
-    styleTarget.style.setProperty("--hero-wave-rotate", `${angle * 0.035}deg`);
-    styleTarget.style.setProperty(
-      "--hero-wave-scale",
-      `${1.07 + speed * 0.045}`,
-    );
+  const context = canvas.getContext("2d");
+  if (!context) return canvas;
 
-    gsap.to(cursorWaveRef.current, {
-      dx: normalX * 70 + velocityX * 0.5,
-      dy: normalY * 70 + velocityY * 0.5,
-      frequencyX: 0.009 + Math.abs(normalY) * 0.012 + speed * 0.006,
-      frequencyY: 0.019 + Math.abs(normalX) * 0.018 + speed * 0.01,
-      scale: 22 + speed * 42,
-      duration: 0.32,
-      ease: "power3.out",
-      overwrite: true,
-      onUpdate: applyCursorWave,
-    });
-  }, [applyCursorWave]);
+  const center = size / 2;
+  context.clearRect(0, 0, size, size);
 
-  const handlePointerLeave = useCallback(() => {
-    const section = heroRef.current;
-    const cursorLayer =
-      cursorLayerRef.current ??
-      section?.querySelector<HTMLElement>(".hero-cursor-effect");
-    if (!section) return;
+  const glow = context.createRadialGradient(
+    center * 0.52,
+    center * 0.5,
+    size * 0.04,
+    center,
+    center,
+    center * 1.18,
+  );
+  glow.addColorStop(0, "rgba(255,255,255,0.2)");
+  glow.addColorStop(0.3, "rgba(119,179,207,0.1)");
+  glow.addColorStop(0.68, "rgba(5,35,50,0.1)");
+  glow.addColorStop(1, "rgba(255,255,255,0)");
 
-    section.classList.remove("is-pointer-active");
-    lastPointerRef.current = null;
+  context.fillStyle = glow;
+  context.fillRect(0, 0, size, size);
 
-    const styleTarget = cursorLayer ?? section;
-    styleTarget.style.setProperty("opacity", "0");
-    styleTarget.style.setProperty("--hero-cursor-opacity", "0");
-    styleTarget.style.setProperty("--hero-caustic-opacity", "0");
-    styleTarget.style.setProperty("--hero-drift-x", "0px");
-    styleTarget.style.setProperty("--hero-drift-y", "0px");
-    styleTarget.style.setProperty("--hero-wave-rotate", "0deg");
-    styleTarget.style.setProperty("--hero-wave-scale", "1.07");
+  return canvas;
+}
 
-    gsap.to(cursorWaveRef.current, {
-      dx: 0,
-      dy: 0,
-      frequencyX: 0.009,
-      frequencyY: 0.019,
-      scale: 22,
-      duration: 0.72,
-      ease: "power3.out",
-      overwrite: true,
-      onUpdate: applyCursorWave,
-    });
-  }, [applyCursorWave]);
+function HeroWaterCanvas({ image }: { image: string }) {
+  const hostRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const intro = window.setTimeout(() => setIntroDone(true), 1600);
+    const host = hostRef.current;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!host || reduceMotion.matches) return;
+
+    const heroSection = host.closest<HTMLElement>("[data-hero-section]");
+    let app: PixiApplication | null = null;
+    let imageLayer: PixiContainer | null = null;
+    let heroSprite: PixiSprite | null = null;
+    let resizeObserver: ResizeObserver | null = null;
+    let cancelled = false;
+    let activeFilterCount = 0;
+    let poolIndex = 0;
+    let lastFlowAngle = 0;
+    let lastPointer: { x: number; y: number } | null = null;
+    let lastRipple = { time: 0, x: 0, y: 0 };
+
+    type Ripple = {
+      active: boolean;
+      age: number;
+      duration: number;
+      filter: PixiDisplacementFilter;
+      highlight: PixiSprite;
+      map: PixiSprite;
+      originX: number;
+      originY: number;
+      driftX: number;
+      driftY: number;
+      maxScaleX: number;
+      maxScaleY: number;
+      strength: number;
+    };
+
+    let ripples: Ripple[] = [];
+
+    const fitHeroSprite = () => {
+      if (!host || !app || !heroSprite) return;
+
+      const width = Math.max(1, host.clientWidth);
+      const height = Math.max(1, host.clientHeight);
+      app.renderer.resize(width, height);
+
+      const textureWidth = heroSprite.texture.width;
+      const textureHeight = heroSprite.texture.height;
+      const scale = Math.max(width / textureWidth, height / textureHeight);
+
+      heroSprite.scale.set(scale);
+      heroSprite.position.set(
+        (width - textureWidth * scale) / 2,
+        (height - textureHeight * scale) / 2,
+      );
+
+      app.stage.filterArea = app.screen;
+      if (imageLayer) {
+        imageLayer.filterArea = app.screen;
+      }
+    };
+
+    const syncFilters = () => {
+      if (!imageLayer) return;
+
+      const activeFilters = ripples
+        .filter((ripple) => ripple.active)
+        .map((ripple) => ripple.filter);
+
+      if (activeFilters.length !== activeFilterCount) {
+        imageLayer.filters = activeFilters;
+        activeFilterCount = activeFilters.length;
+        host.classList.toggle("is-rippling", activeFilterCount > 0);
+      }
+    };
+
+    const spawnRipple = (
+      x: number,
+      y: number,
+      speed: number,
+      angle: number,
+    ) => {
+      if (!ripples.length) return;
+
+      const ripple = ripples[poolIndex];
+      poolIndex = (poolIndex + 1) % ripples.length;
+
+      const size = 460 + speed * 340;
+      const flowAngle = Number.isFinite(angle) ? angle : lastFlowAngle;
+      lastFlowAngle = flowAngle;
+      const directionX = Math.cos(flowAngle);
+      const directionY = Math.sin(flowAngle);
+      const angleVariation = (Math.random() - 0.5) * 0.32;
+
+      ripple.active = true;
+      ripple.age = 0;
+      ripple.duration = 1800 + speed * 460;
+      ripple.originX = x;
+      ripple.originY = y;
+      ripple.driftX = directionX * (58 + speed * 112);
+      ripple.driftY = directionY * (34 + speed * 70);
+      ripple.maxScaleX = (size / 512) * (2.34 + speed * 0.94);
+      ripple.maxScaleY = (size / 512) * (0.92 + speed * 0.32);
+      ripple.strength = 36 + speed * 44;
+      ripple.map.position.set(x, y);
+      ripple.map.rotation = flowAngle + angleVariation;
+      ripple.map.scale.set(0.04, 0.018);
+      ripple.highlight.position.set(x, y);
+      ripple.highlight.rotation = ripple.map.rotation;
+      ripple.highlight.scale.set(0.05, 0.022);
+      ripple.highlight.alpha = 0;
+      ripple.filter.scale.x = 0;
+      ripple.filter.scale.y = 0;
+      syncFilters();
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+
+      const rect = host.getBoundingClientRect();
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      if (!inside) {
+        lastPointer = null;
+        return;
+      }
+
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const previous = lastPointer ?? { x, y };
+      const velocityX = x - previous.x;
+      const velocityY = y - previous.y;
+      const speed = Math.min(1, Math.hypot(velocityX, velocityY) / 58);
+      const angle =
+        Math.abs(velocityX) + Math.abs(velocityY) > 0.5
+          ? Math.atan2(velocityY, velocityX)
+          : lastFlowAngle;
+      const now = performance.now();
+      const distance = Math.hypot(x - lastRipple.x, y - lastRipple.y);
+
+      lastPointer = { x, y };
+
+      if (now - lastRipple.time > 95 && distance > 38) {
+        spawnRipple(x, y, speed, angle);
+        lastRipple = { time: now, x, y };
+      }
+    };
+
+    const handlePointerLeave = () => {
+      lastPointer = null;
+    };
+
+    const run = async () => {
+      const {
+        Application,
+        Assets,
+        Container,
+        DisplacementFilter,
+        Sprite,
+        Texture,
+      } = await import("pixi.js");
+
+      if (cancelled) return;
+
+      const pixiApp = new Application();
+      app = pixiApp;
+
+      await pixiApp.init({
+        antialias: true,
+        autoDensity: true,
+        backgroundAlpha: 0,
+        powerPreference: "high-performance",
+        preference: "webgl",
+        resolution: Math.min(window.devicePixelRatio || 1, 2),
+        width: Math.max(1, host.clientWidth),
+        height: Math.max(1, host.clientHeight),
+      });
+
+      if (cancelled) {
+        pixiApp.destroy({ removeView: true }, true);
+        return;
+      }
+
+      pixiApp.canvas.className = "hero-pixi-canvas";
+      host.appendChild(pixiApp.canvas);
+
+      const texture = await Assets.load(image);
+      if (cancelled) {
+        pixiApp.destroy({ removeView: true }, true);
+        return;
+      }
+
+      imageLayer = new Container();
+      heroSprite = Sprite.from(texture);
+      imageLayer.addChild(heroSprite);
+      pixiApp.stage.addChild(imageLayer);
+
+      const highlightLayer = new Container();
+      const mapTexture = Texture.from(createFlowDisplacementMap(), true);
+      const highlightTexture = Texture.from(createFlowHighlightMap(), true);
+
+      ripples = Array.from({ length: 5 }, () => {
+        const map = Sprite.from(mapTexture);
+        const highlight = Sprite.from(highlightTexture);
+        const filter = new DisplacementFilter({
+          sprite: map,
+          scale: { x: 0, y: 0 },
+          padding: 120,
+        });
+
+        map.anchor.set(0.5);
+        map.position.set(-9999, -9999);
+        map.scale.set(0.001);
+        map.renderable = false;
+
+        highlight.anchor.set(0.5);
+        highlight.position.set(-9999, -9999);
+        highlight.scale.set(0.001);
+        highlight.alpha = 0;
+
+        pixiApp.stage.addChild(map);
+        highlightLayer.addChild(highlight);
+
+        return {
+          active: false,
+          age: 0,
+          duration: 1400,
+          filter,
+          highlight,
+          map,
+          originX: 0,
+          originY: 0,
+          driftX: 0,
+          driftY: 0,
+          maxScaleX: 1,
+          maxScaleY: 1,
+          strength: 0,
+        };
+      });
+
+      pixiApp.stage.addChild(highlightLayer);
+      fitHeroSprite();
+      host.classList.add("is-ready");
+      heroSection?.classList.add("is-pixi-hero-ready");
+
+      pixiApp.ticker.add((ticker) => {
+        let changedActiveState = false;
+
+        const deltaMS = Math.min(ticker.deltaMS, 32);
+
+        ripples.forEach((ripple) => {
+          if (!ripple.active) return;
+
+          ripple.age += deltaMS;
+          const progress = Math.min(1, ripple.age / ripple.duration);
+          const attackProgress = Math.min(1, progress / 0.14);
+          const attack = 1 - (1 - attackProgress) ** 3;
+          const expand = 1 - (1 - progress) ** 2.7;
+          const release = (1 - progress) ** 1.65;
+          const envelope = attack * release;
+          const drift = 1 - (1 - progress) ** 2.2;
+          const pulse = 0.98 + Math.sin(progress * Math.PI * 1.65) * 0.035;
+          const scaleX = Math.max(0.001, ripple.maxScaleX * expand);
+          const scaleY = Math.max(0.001, ripple.maxScaleY * (0.62 + expand * 0.38));
+          const strength = ripple.strength * envelope;
+
+          ripple.map.position.set(
+            ripple.originX + ripple.driftX * drift,
+            ripple.originY + ripple.driftY * drift,
+          );
+          ripple.map.scale.set(scaleX, scaleY);
+          ripple.map.rotation += deltaMS * 0.000045;
+          ripple.filter.scale.x = strength * pulse;
+          ripple.filter.scale.y = strength * 0.92 * (1.04 - (pulse - 0.98));
+          ripple.highlight.position.set(
+            ripple.originX + ripple.driftX * drift * 0.92,
+            ripple.originY + ripple.driftY * drift * 0.92,
+          );
+          ripple.highlight.scale.set(scaleX * 0.92, scaleY * 0.95);
+          ripple.highlight.alpha = Math.min(0.16, envelope * 0.24);
+
+          if (progress >= 1) {
+            ripple.active = false;
+            ripple.map.position.set(-9999, -9999);
+            ripple.map.scale.set(0.001);
+            ripple.highlight.position.set(-9999, -9999);
+            ripple.highlight.scale.set(0.001);
+            ripple.highlight.alpha = 0;
+            ripple.filter.scale.x = 0;
+            ripple.filter.scale.y = 0;
+            changedActiveState = true;
+          }
+        });
+
+        if (changedActiveState) {
+          syncFilters();
+        }
+      });
+
+      resizeObserver = new ResizeObserver(fitHeroSprite);
+      resizeObserver.observe(host);
+      window.addEventListener("pointermove", handlePointerMove, {
+        passive: true,
+      });
+      window.addEventListener("pointerleave", handlePointerLeave);
+    };
+
+    run().catch(() => {
+      host.classList.remove("is-ready", "is-rippling");
+      heroSection?.classList.remove("is-pixi-hero-ready");
+    });
+
+    return () => {
+      cancelled = true;
+      resizeObserver?.disconnect();
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", handlePointerLeave);
+      host.classList.remove("is-ready", "is-rippling");
+      heroSection?.classList.remove("is-pixi-hero-ready");
+
+      if (app) {
+        app.destroy({ removeView: true }, true);
+      }
+    };
+  }, [image]);
+
+  return <div ref={hostRef} className="hero-pixi-water" aria-hidden />;
+}
+
+function HomeHero() {
+  const [active, setActive] = useState(0);
+  const introDone = true;
+  const activeSlide = homeSlides[active];
+
+  useEffect(() => {
+    if (homeSlides.length <= 1) return;
+
     const interval = window.setInterval(() => {
       setActive((value) => (value + 1) % homeSlides.length);
     }, 6200);
+
     return () => {
-      window.clearTimeout(intro);
       window.clearInterval(interval);
     };
   }, []);
 
-  useEffect(() => {
-    const section = heroRef.current;
-    const cursorLayer = cursorLayerRef.current;
-    const cursorWave = cursorWaveRef.current;
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => {
-      reducedMotionRef.current = media.matches;
-      if (media.matches) {
-        heroRef.current?.classList.remove("is-pointer-active");
-      }
-    };
-
-    update();
-    media.addEventListener("change", update);
-
-    return () => {
-      media.removeEventListener("change", update);
-      gsap.killTweensOf(cursorWave);
-      if (section) {
-        gsap.killTweensOf(section);
-      }
-      if (cursorLayer) {
-        gsap.killTweensOf(cursorLayer);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const section = heroRef.current;
-    if (!section) return;
-
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (reduceMotion) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".hero-live-title",
-        { y: 26, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.1, delay: 1.15, ease: "power3.out" },
-      );
-      gsap.fromTo(
-        ".hero-slider-ui",
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, delay: 1.55, ease: "power3.out" },
-      );
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
-      ref={heroRef}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+      data-hero-section
       className="relative h-svh min-h-[620px] overflow-hidden bg-amali-dark"
     >
-      <svg aria-hidden className="absolute size-0">
-        <filter id="amali-water-filter">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.012 0.025"
-            numOctaves="2"
-            seed="6"
-            result="noise"
-          >
-            <animate
-              attributeName="baseFrequency"
-              dur="8s"
-              values="0.012 0.025;0.018 0.019;0.012 0.025"
-              repeatCount="indefinite"
-            />
-          </feTurbulence>
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
-        </filter>
-        <filter
-          id="amali-cursor-water-filter"
-          x="-18%"
-          y="-18%"
-          width="136%"
-          height="136%"
-        >
-          <feTurbulence
-            ref={cursorTurbulenceRef}
-            type="fractalNoise"
-            baseFrequency="0.009 0.019"
-            numOctaves="2"
-            seed="11"
-            result="cursorNoise"
-          />
-          <feOffset
-            ref={cursorNoiseOffsetRef}
-            in="cursorNoise"
-            dx="0"
-            dy="0"
-            result="cursorShiftedNoise"
-          />
-          <feDisplacementMap
-            ref={cursorDisplacementRef}
-            in="SourceGraphic"
-            in2="cursorShiftedNoise"
-            scale="22"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
-        </filter>
-      </svg>
-
-      <div className="absolute inset-0 z-10 overflow-hidden">
+      <div className="hero-base-image absolute inset-0 z-10 overflow-hidden">
         {homeSlides.map((slide, index) => (
           <img
             key={slide.label}
             src={slide.image}
             alt=""
             aria-hidden
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className={`fill-media scale-[1.02] transition-opacity duration-[1400ms] ${
               active === index ? "opacity-100" : "opacity-0"
             }`}
           />
         ))}
       </div>
-      <div className="hero-top-blur absolute inset-x-0 top-0 z-20 h-[32vh] overflow-hidden">
+      <div className="hero-blur-veil absolute inset-0 z-20 overflow-hidden">
         {homeSlides.map((slide, index) => (
           <img
             key={`top-blur-${slide.label}`}
             src={slide.image}
             alt=""
             aria-hidden
+            loading="eager"
+            decoding="async"
             className={`hero-water fill-media scale-[1.08] transition-opacity duration-[1400ms] ${
               active === index ? "opacity-100" : "opacity-0"
             }`}
           />
         ))}
       </div>
-      <div
-        ref={cursorLayerRef}
-        className="hero-cursor-effect absolute inset-0 z-20 overflow-hidden"
-        aria-hidden
-      >
-        {homeSlides.map((slide, index) => (
-          <img
-            key={`cursor-${slide.label}`}
-            src={slide.image}
-            alt=""
-            aria-hidden
-            className={`hero-water fill-media scale-[1.08] transition-opacity duration-[1400ms] ${
-              active === index ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        ))}
-      </div>
+      <div className="hero-wave-veil absolute inset-0 z-20" aria-hidden />
+      <div className="hero-glass-wave absolute inset-x-[-8%] top-[7%] z-20 h-[46vh]" aria-hidden />
+      <HeroWaterCanvas image={activeSlide.image} />
       <div className="absolute inset-0 z-20 bg-black/25" />
       <div className="water-glass absolute inset-0 z-20 opacity-55" />
       <div className="absolute inset-x-0 bottom-0 z-20 hidden h-1/2 bg-gradient-to-t from-amali-dark/65 to-transparent md:block" />
@@ -911,7 +1087,8 @@ function HomeHero() {
             />
           </div>
           <p className="shrink-0 text-[12px] uppercase leading-none tracking-[1.2px] text-white">
-            0{active + 1} / 03
+            {String(active + 1).padStart(2, "0")} /{" "}
+            {String(homeSlides.length).padStart(2, "0")}
           </p>
         </div>
         <ArrowButton href={activeSlide.href}>{activeSlide.cta}</ArrowButton>
@@ -933,37 +1110,105 @@ function FlyThroughSection({
 
     const section = sectionRef.current;
     if (!section) return;
+    const video = section.querySelector<HTMLVideoElement>(".fly-video-element");
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reduceMotion) return;
+    if (reduceMotion) {
+      video?.play().catch(() => {});
+      return;
+    }
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".fly-video",
-        { y: 90, scale: 0.92, opacity: 0 },
-        {
-          y: 0,
-          scale: 1,
-          opacity: 1,
-          duration: 1.25,
-          ease: "power3.out",
-          scrollTrigger: { trigger: section, start: "top 75%" },
+      gsap.set(".fly-video", {
+        borderRadius: 24,
+        opacity: 0.78,
+        scale: 0.72,
+        transformOrigin: "center center",
+      });
+      gsap.set(".fly-title", {
+        opacity: 0,
+        scale: 0.62,
+        y: 74,
+        transformOrigin: "center center",
+      });
+      gsap.set(".fly-title-script", {
+        opacity: 0,
+        scale: 0.82,
+        y: 34,
+      });
+      gsap.set(".fly-card", { opacity: 0, y: 86 });
+
+      const playVideo = () => {
+        video?.play().catch(() => {});
+      };
+      const pauseVideo = (reset = false) => {
+        if (!video) return;
+        video.pause();
+        if (reset) video.currentTime = 0;
+      };
+
+      const stickyTimeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.85,
+          invalidateOnRefresh: true,
+          onEnter: playVideo,
+          onEnterBack: playVideo,
+          onLeave: () => pauseVideo(),
+          onLeaveBack: () => pauseVideo(true),
         },
-      );
-      gsap.fromTo(
-        ".fly-card",
-        { y: 56, opacity: 0 },
-        {
-          y: 0,
+      });
+
+      stickyTimeline
+        .to(".fly-video", {
+          borderRadius: 0,
           opacity: 1,
-          duration: 1,
-          delay: 0.15,
-          ease: "power3.out",
-          scrollTrigger: { trigger: section, start: "top 70%" },
-        },
-      );
+          scale: 1.34,
+          duration: 0.72,
+        })
+        .to(
+          ".fly-title",
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.58,
+          },
+          0.08,
+        )
+        .to(
+          ".fly-title-script",
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.42,
+          },
+          0.24,
+        )
+        .to(
+          ".fly-card",
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.25,
+          },
+          0.74,
+        )
+        .to(
+          ".fly-video",
+          {
+            scale: 1.42,
+            duration: 0.26,
+          },
+          0.74,
+        );
+
       gsap.to(".cloud-a", {
         x: "-12vw",
         y: "-8vh",
@@ -971,7 +1216,7 @@ function FlyThroughSection({
         scrollTrigger: {
           trigger: section,
           start: "top bottom",
-          end: "bottom top",
+          end: "bottom bottom",
           scrub: 1,
         },
       });
@@ -982,7 +1227,7 @@ function FlyThroughSection({
         scrollTrigger: {
           trigger: section,
           start: "top bottom",
-          end: "bottom top",
+          end: "bottom bottom",
           scrub: 1,
         },
       });
@@ -998,12 +1243,14 @@ function FlyThroughSection({
       className={
         isHandoff
           ? "fly-panel pointer-events-none absolute inset-0 z-40 overflow-hidden bg-amali-dark text-white"
-          : "relative overflow-hidden bg-white text-amali-dark"
+          : "relative h-[245svh] overflow-visible bg-white text-amali-dark"
       }
     >
       <div
         className={`fly-panel-frame relative overflow-hidden ${
-          isHandoff ? "h-full min-h-[620px]" : "h-svh min-h-[620px]"
+          isHandoff
+            ? "h-full min-h-[620px]"
+            : "sticky top-0 h-svh min-h-[620px]"
         }`}
       >
         <div className="absolute left-1/2 top-1/2 aspect-square w-[170vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(218,208,193,0.55)_0%,rgba(255,255,255,0)_64%)]" />
@@ -1026,10 +1273,10 @@ function FlyThroughSection({
               : "top-[42%] text-amali-dark"
           }`}
         >
-          <p className="text-[30px] font-light uppercase leading-[0.86] tracking-[0.84px] md:text-[62px] md:leading-[0.94] md:tracking-[1.86px] lg:text-[76px] lg:tracking-[2.2px]">
+          <p className="fly-title-main text-[30px] font-light uppercase leading-[0.86] tracking-[0.84px] md:text-[62px] md:leading-[0.94] md:tracking-[1.86px] lg:text-[76px] lg:tracking-[2.2px]">
             step into a reality that transcends
             <span
-              className={`font-script relative block text-[48px] normal-case leading-none tracking-normal md:text-[102px] lg:text-[128px] ${
+              className={`fly-title-script font-script relative block text-[48px] normal-case leading-none tracking-normal md:text-[102px] lg:text-[128px] ${
                 isHandoff ? "text-[#d8bf7d]" : "-z-10 text-[#b19056]"
               }`}
             >
@@ -1041,7 +1288,7 @@ function FlyThroughSection({
           className={
             isHandoff
               ? "fly-video absolute inset-0 z-30 h-full w-full overflow-hidden bg-amali-dark"
-              : "fly-video absolute left-1/2 top-1/2 z-30 aspect-[1185/670] h-[58vh] w-[92vw] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-amali-dark md:h-[72vh]"
+              : "fly-video absolute left-1/2 top-1/2 z-30 aspect-[1185/670] h-[54vh] w-[88vw] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-amali-dark md:h-[68vh] md:w-[86vw]"
           }
         >
           <img
@@ -1051,10 +1298,10 @@ function FlyThroughSection({
             className={`fill-media opacity-100 ${isHandoff ? "scale-[1.04]" : ""}`}
           />
           <video
-            className="fill-media opacity-100"
+            className="fly-video-element fill-media opacity-100"
             muted
             playsInline
-            autoPlay
+            autoPlay={isHandoff}
             loop
             preload="auto"
             poster={`${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`}
@@ -1088,141 +1335,11 @@ function FlyThroughSection({
 }
 
 function HeroFlySequence() {
-  const sequenceRef = useRef<HTMLDivElement | null>(null);
-  const pinRef = useRef<HTMLDivElement | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(media.matches);
-
-    update();
-    media.addEventListener("change", update);
-
-    return () => media.removeEventListener("change", update);
-  }, []);
-
-  useEffect(() => {
-    if (reducedMotion) return;
-
-    const sequence = sequenceRef.current;
-    const pin = pinRef.current;
-    if (!sequence || !pin) return;
-
-    const ctx = gsap.context(() => {
-      gsap.set(".fly-panel", {
-        autoAlpha: 0,
-        borderRadius: 42,
-        scale: 0.16,
-        transformOrigin: "50% 50%",
-      });
-      gsap.set(".fly-panel-frame", { scale: 1.12, transformOrigin: "50% 50%" });
-      gsap.set(".fly-title", { autoAlpha: 0, scale: 0.68, y: 58 });
-      gsap.set(".fly-video", { autoAlpha: 1, scale: 1.08, y: 0 });
-      gsap.set(".fly-card", { autoAlpha: 0, scale: 0.98, y: 54 });
-
-      gsap
-        .timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: sequence,
-            start: "top top",
-            end: "+=150%",
-            pin,
-            pinSpacing: true,
-            scrub: 0.8,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        })
-        .to(
-          ".hero-sequence-hero",
-          {
-            filter: "blur(6px)",
-            opacity: 0.18,
-            scale: 1.06,
-            duration: 0.58,
-          },
-          0,
-        )
-        .to(
-          ".fly-panel",
-          {
-            autoAlpha: 1,
-            borderRadius: 0,
-            scale: 1,
-            duration: 0.5,
-          },
-          0.04,
-        )
-        .to(".fly-panel-frame", { scale: 1, duration: 0.56 }, 0.04)
-        .to(".fly-video", { scale: 1, duration: 0.7 }, 0.04)
-        .to(
-          ".fly-title",
-          {
-            autoAlpha: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.24,
-          },
-          0.14,
-        )
-        .to(
-          ".fly-title",
-          {
-            scale: 1.34,
-            y: "-6vh",
-            duration: 0.34,
-          },
-          0.34,
-        )
-        .to(
-          ".fly-title",
-          {
-            autoAlpha: 0,
-            y: "-12vh",
-            duration: 0.14,
-          },
-          0.66,
-        )
-        .to(
-          ".fly-card",
-          {
-            autoAlpha: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.22,
-          },
-          0.84,
-        )
-        .to(".cloud-a", { x: "-8vw", y: "-6vh", duration: 1 }, 0)
-        .to(".cloud-b", { x: "7vw", y: "6vh", duration: 1 }, 0);
-    }, sequence);
-
-    return () => ctx.revert();
-  }, [reducedMotion]);
-
-  if (reducedMotion) {
-    return (
-      <>
-        <HomeHero />
-        <FlyThroughSection />
-      </>
-    );
-  }
-
   return (
-    <div ref={sequenceRef} className="hero-fly-sequence relative bg-amali-dark">
-      <div
-        ref={pinRef}
-        className="hero-fly-pin relative h-svh min-h-[620px] overflow-hidden"
-      >
-        <div className="hero-sequence-hero absolute inset-0 z-10 will-change-transform">
-          <HomeHero />
-        </div>
-        <FlyThroughSection mode="handoff" />
-      </div>
-    </div>
+    <>
+      <HomeHero />
+      <FlyThroughSection />
+    </>
   );
 }
 
