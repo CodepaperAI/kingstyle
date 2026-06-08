@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Image from "next/image";
 import type {
   Application as PixiApplication,
   Container as PixiContainer,
@@ -24,6 +25,18 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ASSET_BASE = "https://amaliproperties.com/wp-content";
 const HERO_IMAGE = "/hero-villa-screenshot.png";
+const FLY_THROUGH_VIDEO = "/amali-fly-through.mp4";
+
+const villaGalleryImages = [
+  {
+    src: "/amali-villa-evening-front.jpeg",
+    alt: "Illuminated modern white villa exterior at dusk",
+  },
+  {
+    src: "/amali-villa-evening-entrance.jpeg",
+    alt: "Modern villa facade with arched windows illuminated at dusk",
+  },
+];
 
 const homeSlides = [
   {
@@ -1336,7 +1349,7 @@ function FlyThroughSection({
             poster={`${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`}
           >
             <source
-              src={`${ASSET_BASE}/uploads/2026/02/zoom_out_new.mp4`}
+              src={FLY_THROUGH_VIDEO}
               type="video/mp4"
             />
           </video>
@@ -1606,6 +1619,46 @@ function HeroFlySequence() {
         <FlyThroughSection mode="handoff" />
       </div>
     </div>
+  );
+}
+
+function VillaGallerySection() {
+  return (
+    <section
+      aria-label="Villa exterior gallery"
+      className="relative overflow-hidden bg-amali-sand pb-12 pt-16 text-amali-dark md:pb-20 md:pt-24"
+    >
+      <div className="amali-container">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6">
+          <figure className="reveal-up md:col-span-7">
+            <div className="relative aspect-[1600/855] overflow-hidden bg-amali-dark/10">
+              <Image
+                src={villaGalleryImages[0].src}
+                alt={villaGalleryImages[0].alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 58vw"
+                loading="lazy"
+                decoding="async"
+                className="object-cover"
+              />
+            </div>
+          </figure>
+          <figure className="reveal-up md:col-span-5 md:pt-24">
+            <div className="relative aspect-[1600/820] overflow-hidden bg-amali-dark/10">
+              <Image
+                src={villaGalleryImages[1].src}
+                alt={villaGalleryImages[1].alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 42vw"
+                loading="lazy"
+                decoding="async"
+                className="object-cover"
+              />
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -2018,6 +2071,7 @@ export default function AmaliLanding() {
       <Header onRegister={() => setModalOpen(true)} />
       <main id="content" className="bg-amali-dark">
         <HeroFlySequence />
+        <VillaGallerySection />
         <VisionSection />
         <MapSection />
         <TeasersSection />
