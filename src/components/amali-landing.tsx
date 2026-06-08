@@ -9,7 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-import Image from "next/image";
 import type {
   Application as PixiApplication,
   Container as PixiContainer,
@@ -49,9 +48,9 @@ const homeSlides = [
 
 const visionImages = [
   {
-    src: `${ASSET_BASE}/uploads/2025/06/GF-Living-Room_View-2_1-1.png.webp`,
-    className: "col-span-7 md:col-span-4 md:pt-20 lg:pt-28",
-    frame: "h-[180px] sm:h-[390px]",
+    src: villaGalleryImages[0].src,
+    className: "reveal-up col-span-12 md:col-span-5 md:pt-10 lg:pt-16",
+    frame: "aspect-[1600/855]",
   },
   {
     src: `${ASSET_BASE}/uploads/2025/06/Copy-of-olga-thelavart-1nrY9CLAGcI-unsplash-1.png.webp`,
@@ -65,9 +64,9 @@ const visionImages = [
     frame: "aspect-[190/260]",
   },
   {
-    src: `${ASSET_BASE}/uploads/2025/06/DM_GF_Dining-1.png.webp`,
-    className: "col-span-9 col-start-4 md:col-span-5 md:col-start-8",
-    frame: "aspect-[500/380]",
+    src: villaGalleryImages[1].src,
+    className: "reveal-up col-span-12 md:col-span-7 md:col-start-6",
+    frame: "aspect-[1600/820]",
   },
 ];
 
@@ -1626,46 +1625,6 @@ function HeroFlySequence() {
   );
 }
 
-function VillaGallerySection() {
-  return (
-    <section
-      aria-label="Home exterior gallery"
-      className="relative overflow-hidden bg-amali-sand pb-12 pt-16 text-amali-dark md:pb-20 md:pt-24"
-    >
-      <div className="amali-container">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6">
-          <figure className="reveal-up md:col-span-7">
-            <div className="relative aspect-[1600/855] overflow-hidden bg-amali-dark/10">
-              <Image
-                src={villaGalleryImages[0].src}
-                alt={villaGalleryImages[0].alt}
-                fill
-                sizes="(max-width: 768px) 100vw, 58vw"
-                loading="lazy"
-                decoding="async"
-                className="object-cover"
-              />
-            </div>
-          </figure>
-          <figure className="reveal-up md:col-span-5 md:pt-24">
-            <div className="relative aspect-[1600/820] overflow-hidden bg-amali-dark/10">
-              <Image
-                src={villaGalleryImages[1].src}
-                alt={villaGalleryImages[1].alt}
-                fill
-                sizes="(max-width: 768px) 100vw, 42vw"
-                loading="lazy"
-                decoding="async"
-                className="object-cover"
-              />
-            </div>
-          </figure>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function VisionSection() {
   return (
     <section
@@ -1686,17 +1645,18 @@ function VisionSection() {
       </video>
       <div className="amali-container relative z-10">
         <div className="mb-12 grid grid-cols-12 gap-x-3 gap-y-8 md:mb-16 md:gap-x-6">
-          <div className="reveal-up col-span-8 md:col-span-4">
-            <div className="image-frame h-[180px] sm:h-[390px]">
+          <div className={visionImages[0].className}>
+            <div className={`image-frame ${visionImages[0].frame}`}>
               <img
                 src={visionImages[0].src}
                 alt=""
                 aria-hidden
                 className="fill-media"
+                style={{ transform: "none" }}
               />
             </div>
           </div>
-          <div className="reveal-up col-span-12 md:col-span-7 md:pt-24">
+          <div className="reveal-up col-span-12 md:col-span-6 md:col-start-7 md:pt-20">
             <h2 className="mb-4 max-w-[760px] text-[32px] font-light uppercase leading-none tracking-[1.32px] md:text-[44px] md:leading-[0.88]">
               Building homes, creating legacies
             </h2>
@@ -1729,13 +1689,14 @@ function VisionSection() {
               />
             </div>
           </div>
-          <div className="reveal-up col-span-9 col-start-4 md:col-span-5 md:col-start-8">
-            <div className="image-frame aspect-[500/380]">
+          <div className={visionImages[3].className}>
+            <div className={`image-frame ${visionImages[3].frame}`}>
               <img
                 src={visionImages[3].src}
                 alt=""
                 aria-hidden
                 className="fill-media"
+                style={{ transform: "none" }}
               />
             </div>
           </div>
@@ -2075,7 +2036,6 @@ export default function AmaliLanding() {
       <Header onRegister={() => setModalOpen(true)} />
       <main id="content" className="bg-amali-dark">
         <HeroFlySequence />
-        <VillaGallerySection />
         <VisionSection />
         <MapSection />
         <TeasersSection />
