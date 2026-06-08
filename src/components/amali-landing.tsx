@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Image from "next/image";
 import type {
   Application as PixiApplication,
   Container as PixiContainer,
@@ -25,6 +26,10 @@ gsap.registerPlugin(ScrollTrigger);
 const ASSET_BASE = "https://amaliproperties.com/wp-content";
 const HERO_IMAGE = "/hero-villa-screenshot.png";
 const FLY_THROUGH_VIDEO = "/amali-fly-through.mp4";
+const KINGSTYLE_LOGO = "/kingstyle-logo-transparent.png";
+const KINGSTYLE_WORDMARK = "/kingstyle-logo-wordmark-transparent.png";
+const WHY_BUILD_BACKGROUND =
+  "https://images.pexels.com/photos/8830259/pexels-photo-8830259.jpeg?auto=compress&cs=tinysrgb&w=2400";
 
 const villaGalleryImages = [
   {
@@ -75,27 +80,30 @@ const teaserCards = [
     eyebrow: "King Style Homes",
     title: "Custom Builds",
     href: "https://amaliproperties.com/island/amali-island-welcome/",
-    image: `${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`,
+    image:
+      "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1800",
   },
   {
     eyebrow: "King Style Homes",
     title: "House & Land",
     href: "https://amaliproperties.com/residences/residences-teaser/",
-    image: `${ASSET_BASE}/uploads/2026/02/View-8_Penthouse.jpg`,
+    image:
+      "https://images.pexels.com/photos/32992819/pexels-photo-32992819.jpeg?auto=compress&cs=tinysrgb&w=1800",
   },
   {
     eyebrow: "King Style Homes",
     title: "Renovations",
     href: "https://amaliproperties.com/the-villas/",
-    image: `${ASSET_BASE}/uploads/2025/08/CAM-3A_-1.png`,
+    image:
+      "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&w=1800",
   },
 ];
 
 const mapHotspots = [
-  { label: "Display Centers", left: "33%", top: "48%", align: "top" },
-  { label: "Home Designs", left: "57%", top: "46%", align: "bottom" },
-  { label: "Inclusions", left: "46%", top: "55%", align: "top" },
-  { label: "Sydney Projects", left: "25%", top: "58%", align: "top" },
+  { label: "Tailored To You", left: "33%", top: "56%", align: "top" },
+  { label: "Quality Builds", left: "62%", top: "43%", align: "bottom" },
+  { label: "Clear Process", left: "48%", top: "67%", align: "top" },
+  { label: "Local Knowledge", left: "74%", top: "58%", align: "top" },
 ];
 
 const menuGroups = [
@@ -169,7 +177,7 @@ const jsonLd = {
       "@id": "https://amaliproperties.com/#organization",
       name: "King Style Homes",
       url: "https://amaliproperties.com/",
-      logo: `${ASSET_BASE}/uploads/2025/11/Amali-brandmark.jpg`,
+      logo: KINGSTYLE_LOGO,
     },
   ],
 };
@@ -228,25 +236,37 @@ function useHomeReveals() {
   }, []);
 }
 
-function Logo({ dark = false }: { dark?: boolean }) {
-  const { ref: lightRef } = useLottie("/lottie/logo.json", false, true);
+function Logo({
+  dark = false,
+  full = false,
+}: {
+  dark?: boolean;
+  full?: boolean;
+}) {
+  const logoSrc = full ? KINGSTYLE_LOGO : KINGSTYLE_WORDMARK;
 
   return (
     <a
       href="https://amaliproperties.com"
-      className={`focus-ring pointer-events-auto relative flex h-[58px] w-[132px] flex-col items-center justify-center text-center transition-colors duration-500 sm:w-[190px] ${
-        dark ? "text-amali-dark" : "text-white"
+      className={`focus-ring pointer-events-auto relative block transition-opacity duration-500 hover:opacity-80 ${
+        full
+          ? "h-[126px] w-[180px] sm:h-[150px] sm:w-[214px]"
+          : "h-[38px] w-[138px] sm:h-[48px] sm:w-[174px]"
       }`}
       title="King Style Homes"
     >
-      <span ref={lightRef} className="absolute inset-0 block opacity-0" />
-      <span className="relative block text-[26px] font-light uppercase leading-none tracking-[9px] sm:text-[34px] sm:tracking-[12px]">
-        King
-      </span>
-      <span className="relative mt-2 block text-[7px] font-bold uppercase leading-none tracking-[4px] sm:text-[8px]">
-        Style Homes
-      </span>
-      <span className="sr-only">King Style Homes</span>
+      <Image
+        src={logoSrc}
+        alt="King Style Homes"
+        fill
+        sizes={full ? "214px" : "174px"}
+        className={`object-contain ${
+          dark
+            ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.2)]"
+            : "drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
+        }`}
+        priority={!full}
+      />
     </a>
   );
 }
@@ -1710,30 +1730,30 @@ function MapSection() {
   return (
     <section
       id="locations"
-      className="relative aspect-[9/16] overflow-hidden bg-amali-sand text-white lg:aspect-[16/10]"
+      className="relative h-[560px] overflow-hidden bg-amali-sand text-white md:h-[600px] lg:h-[560px] xl:h-[620px]"
     >
       <picture className="absolute inset-0 block">
         <source
           media="(min-width: 1024px)"
-          srcSet={`${ASSET_BASE}/uploads/2025/11/expanded-map-amlali-gradient-20v-3-e1764154025627.jpg`}
+          srcSet={WHY_BUILD_BACKGROUND}
         />
         <img
-          src={`${ASSET_BASE}/uploads/2025/12/test-5.jpg`}
+          src={WHY_BUILD_BACKGROUND}
           alt=""
           aria-hidden
-          className="fill-media"
+          className="fill-media scale-[1.04] object-center"
         />
       </picture>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-amali-sand" />
-      <div className="amali-container relative z-10 pt-12 md:pt-24">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-amali-sand" />
+      <div className="amali-container relative z-10 pt-10 md:pt-16">
         <div className="mx-auto max-w-[930px] text-left md:text-center">
-          <h2 className="reveal-up mb-4 text-[30px] font-light uppercase leading-[1.04] tracking-[1.3px] md:text-[44px] lg:text-[62px] lg:leading-[0.84]">
-            Built with local Sydney insight
+          <h2 className="reveal-up mb-4 text-[30px] font-light uppercase leading-[1.04] tracking-[1.3px] md:text-[42px] lg:text-[54px] lg:leading-[0.9]">
+            Why build with King Style Homes
           </h2>
           <p className="reveal-up font-body max-w-[760px] text-[18px] leading-[24px] md:mx-auto md:text-[21px] md:leading-[27px]">
-            Based in Sydney, King Style Homes understands local requirements,
-            communities and lifestyles, guiding every project from design
-            decisions through to a smooth handover.
+            From tailored designs to transparent communication, our Sydney team
+            brings quality craftsmanship, local knowledge and practical guidance
+            to every stage of your home-building journey.
           </p>
         </div>
       </div>
@@ -1763,14 +1783,9 @@ function TeasersSection() {
   return (
     <section
       id="properties"
-      className="relative -mt-16 overflow-hidden rounded-b-[25px] bg-amali-sand pb-10 text-amali-dark md:-mt-24"
+      className="relative overflow-hidden rounded-b-[25px] bg-amali-sand pb-10 pt-12 text-amali-dark md:pt-16"
     >
-      <div className="flex justify-center overflow-hidden pt-8 text-center md:pt-16">
-        <p className="pointer-events-none text-[30vw] font-light uppercase leading-none opacity-10 md:text-[24vw]">
-          King Style Homes
-        </p>
-      </div>
-      <div className="amali-container -mt-4 mb-10 md:-mt-8 md:mb-16">
+      <div className="amali-container relative z-10 mb-10 md:mb-14">
         <div className="grid grid-cols-12 items-center gap-5">
           <div className="reveal-up col-span-12 md:col-span-7">
             <h2 className="text-[30px] font-light uppercase leading-[0.9] tracking-[0.9px] md:text-[44px] lg:text-[72px] lg:leading-[0.89]">
