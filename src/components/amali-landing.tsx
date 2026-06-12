@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type {
   Application as PixiApplication,
   Container as PixiContainer,
@@ -20,6 +21,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import lottie, { AnimationItem } from "lottie-web";
 import { ChevronRight, Volume2, VolumeX, X } from "lucide-react";
+import {
+  processSteps,
+  services,
+  testimonials,
+  whyBuildItems,
+} from "@/data/site-content";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -46,7 +53,7 @@ const homeSlides = [
   {
     label: "Homes",
     cta: "Explore Home Designs",
-    href: "https://amaliproperties.com/the-villas/",
+    href: "/home-designs",
     image: HERO_IMAGE,
   },
 ];
@@ -75,30 +82,6 @@ const visionImages = [
   },
 ];
 
-const teaserCards = [
-  {
-    eyebrow: "King Style Homes",
-    title: "Custom Builds",
-    href: "https://amaliproperties.com/island/amali-island-welcome/",
-    image:
-      "https://images.pexels.com/photos/8134821/pexels-photo-8134821.jpeg?auto=compress&cs=tinysrgb&w=1800",
-  },
-  {
-    eyebrow: "King Style Homes",
-    title: "House & Land",
-    href: "https://amaliproperties.com/residences/residences-teaser/",
-    image:
-      "https://images.pexels.com/photos/32992819/pexels-photo-32992819.jpeg?auto=compress&cs=tinysrgb&w=1800",
-  },
-  {
-    eyebrow: "King Style Homes",
-    title: "Renovations",
-    href: "https://amaliproperties.com/the-villas/",
-    image:
-      "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&w=1800",
-  },
-];
-
 const mapHotspots = [
   { label: "Tailored To You", left: "33%", top: "56%", align: "top" },
   { label: "Quality Builds", left: "62%", top: "43%", align: "bottom" },
@@ -109,53 +92,51 @@ const mapHotspots = [
 const menuGroups = [
   {
     label: "Home Designs",
-    href: "https://amaliproperties.com/canal/",
+    href: "/home-designs",
     links: [
       {
         label: "Explore our designs",
-        href: "https://amaliproperties.com/residences/residences-teaser/",
+        href: "/home-designs",
       },
     ],
   },
   {
     label: "Services",
-    href: "https://amaliproperties.com/island/",
+    href: "/services",
     links: [
       {
         label: "Custom home builds",
-        href: "https://amaliproperties.com/island/amali-island-welcome/",
+        href: "/services",
       },
       {
         label: "House and land packages",
-        href: "https://amaliproperties.com/island/island-villas/",
+        href: "/services",
       },
       {
         label: "Renovations and extensions",
-        href: "https://amaliproperties.com/island/clubhouse/",
+        href: "/services",
       },
     ],
   },
   {
     label: "Inclusions",
-    href: "https://amaliproperties.com/the-villas/",
+    href: "/standard-inclusions",
     links: [
       {
         label: "Standard inclusions",
-        href: "https://amaliproperties.com/the-villas/",
+        href: "/standard-inclusions",
       },
       {
         label: "Signature inclusions",
-        href: "https://amaliproperties.com/bespoke-villa/villa-elaine/",
+        href: "/signature-inclusions",
       },
     ],
   },
 ];
 
 const singleLinks = [
-  { label: "Home", href: "https://amaliproperties.com/" },
-  { label: "About Us", href: "https://amaliproperties.com/about-amali/" },
-  { label: "Display Centers", href: "https://amaliproperties.com/locations/" },
-  { label: "Contact Us", href: "https://amaliproperties.com/contact/" },
+  { label: "Display Centers", href: "/display-centers" },
+  { label: "Contact Us", href: "/contact-us" },
 ];
 
 const jsonLd = {
@@ -239,16 +220,51 @@ function useHomeReveals() {
 function Logo({
   dark = false,
   full = false,
+  floating = false,
 }: {
   dark?: boolean;
   full?: boolean;
+  floating?: boolean;
 }) {
   const logoSrc = full ? KINGSTYLE_LOGO : KINGSTYLE_WORDMARK;
 
+  if (full && floating) {
+    return (
+      <Link
+        href="/"
+        className="focus-ring pointer-events-auto flex items-center gap-2.5 transition-[opacity,transform] duration-300 hover:scale-[1.015] hover:opacity-90"
+        title="King Style Homes"
+      >
+        <span className="relative block size-[46px] shrink-0 overflow-hidden sm:size-[52px]">
+          <Image
+            src={KINGSTYLE_LOGO}
+            alt=""
+            width={1800}
+            height={1266}
+            quality={100}
+            className="absolute left-1/2 top-0 h-auto w-[146px] max-w-none -translate-x-1/2 sm:w-[166px]"
+            preload
+          />
+        </span>
+        <span className="relative block h-[32px] w-[116px] sm:h-[38px] sm:w-[138px]">
+          <Image
+            src={KINGSTYLE_WORDMARK}
+            alt="King Style Homes"
+            fill
+            sizes="138px"
+            quality={100}
+            className="object-contain drop-shadow-[0_1px_4px_rgba(0,0,0,0.55)]"
+            preload
+          />
+        </span>
+      </Link>
+    );
+  }
+
   return (
-    <a
-      href="https://amaliproperties.com"
-      className={`focus-ring pointer-events-auto relative block transition-opacity duration-500 hover:opacity-80 ${
+    <Link
+      href="/"
+      className={`focus-ring pointer-events-auto relative block transition-[opacity,transform] duration-300 hover:scale-[1.015] hover:opacity-90 ${
         full
           ? "h-[126px] w-[180px] sm:h-[150px] sm:w-[214px]"
           : "h-[38px] w-[138px] sm:h-[48px] sm:w-[174px]"
@@ -260,14 +276,15 @@ function Logo({
         alt="King Style Homes"
         fill
         sizes={full ? "214px" : "174px"}
+        quality={100}
         className={`object-contain ${
           dark
-            ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.2)]"
-            : "drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
+            ? "drop-shadow-[0_1px_3px_rgba(0,0,0,0.65)]"
+            : "drop-shadow-[0_1px_5px_rgba(0,0,0,0.5)]"
         }`}
-        priority={!full}
+        preload={floating}
       />
-    </a>
+    </Link>
   );
 }
 
@@ -448,20 +465,20 @@ function Header({ onRegister }: { onRegister: () => void }) {
               onClick={onRegister}
               className="focus-ring hidden rounded-[40px] bg-amali-sand px-5 py-3 text-[12px] uppercase leading-none tracking-[1.2px] text-amali-dark transition-colors hover:bg-amali-dark hover:text-white lg:block"
             >
-              Enquire
+              Free Quote
             </button>
             <button
               type="button"
               onClick={onRegister}
               className="focus-ring flex size-9 items-center justify-center rounded-full bg-amali-sand text-amali-dark lg:hidden"
-              aria-label="Enquire"
+              aria-label="Get a free quote"
             >
               <ChevronRight aria-hidden className="size-4 rotate-[-35deg]" />
             </button>
           </div>
         </div>
-        <div className="pointer-events-auto absolute left-1/2 top-5 -translate-x-1/2 lg:top-10">
-          <Logo dark={useDarkHeader} />
+        <div className="pointer-events-auto absolute left-1/2 top-4 -translate-x-1/2 rounded-xl border border-white/10 bg-[#201b16]/72 px-3 py-2 shadow-[0_6px_20px_rgba(0,0,0,0.18)] backdrop-blur-md lg:top-8">
+          <Logo dark={useDarkHeader} full floating />
         </div>
         <div className="pointer-events-auto ml-auto hidden lg:block">
           <AudioToggle dark={useDarkHeader} />
@@ -571,6 +588,77 @@ function AudioToggle({ dark = false }: { dark?: boolean }) {
   );
 }
 
+function FullPageWaterEffect() {
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const transitions = gsap.utils.toArray<HTMLElement>(
+      "[data-water-transition]",
+    );
+    const overlay = overlayRef.current;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const desktop = window.matchMedia("(min-width: 768px)").matches;
+
+    if (
+      !transitions.length ||
+      !overlay ||
+      reduceMotion ||
+      !desktop
+    ) {
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(overlay, { opacity: 0, scale: 1.08, rotate: -0.4 });
+
+      transitions.forEach((section) => {
+        const timeline = gsap.timeline({
+          defaults: { ease: "sine.inOut" },
+          scrollTrigger: {
+            trigger: section,
+            start: "top 94%",
+            end: "top 18%",
+            scrub: 0.65,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        timeline
+          .to(
+            overlay,
+            {
+              opacity: 0.42,
+              scale: 1.02,
+              rotate: 0.35,
+              duration: 0.46,
+            },
+            0,
+          )
+          .to(
+            overlay,
+            {
+              opacity: 0,
+              scale: 1,
+              rotate: -0.2,
+              duration: 0.54,
+            },
+            0.46,
+          );
+      });
+    });
+
+    return () => {
+      ctx.revert();
+    };
+  }, []);
+
+  return (
+    <div ref={overlayRef} className="page-water-overlay" aria-hidden />
+  );
+}
+
 function createFlowDisplacementMap(size = 512) {
   const canvas = document.createElement("canvas");
   canvas.width = size;
@@ -675,6 +763,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
     let activeFilterCount = 0;
     let poolIndex = 0;
     let lastFlowAngle = 0;
+    let idleWaveElapsed = 0;
     let lastPointer: { x: number; y: number } | null = null;
     let lastRipple = { time: 0, x: 0, y: 0 };
 
@@ -754,14 +843,14 @@ function HeroWaterCanvas({ image }: { image: string }) {
 
       ripple.active = true;
       ripple.age = 0;
-      ripple.duration = 1800 + speed * 460;
+      ripple.duration = 2200 + speed * 620;
       ripple.originX = x;
       ripple.originY = y;
       ripple.driftX = directionX * (58 + speed * 112);
       ripple.driftY = directionY * (34 + speed * 70);
       ripple.maxScaleX = (size / 512) * (2.34 + speed * 0.94);
       ripple.maxScaleY = (size / 512) * (0.92 + speed * 0.32);
-      ripple.strength = 36 + speed * 44;
+      ripple.strength = 48 + speed * 58;
       ripple.map.position.set(x, y);
       ripple.map.rotation = flowAngle + angleVariation;
       ripple.map.scale.set(0.04, 0.018);
@@ -864,7 +953,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
       const mapTexture = Texture.from(createFlowDisplacementMap(), true);
       const highlightTexture = Texture.from(createFlowHighlightMap(), true);
 
-      ripples = Array.from({ length: 5 }, () => {
+      ripples = Array.from({ length: 7 }, () => {
         const map = Sprite.from(mapTexture);
         const highlight = Sprite.from(highlightTexture);
         const filter = new DisplacementFilter({
@@ -912,6 +1001,15 @@ function HeroWaterCanvas({ image }: { image: string }) {
         let changedActiveState = false;
 
         const deltaMS = Math.min(ticker.deltaMS, 32);
+        idleWaveElapsed += deltaMS;
+
+        if (idleWaveElapsed > 620 && host.clientWidth > 0 && host.clientHeight > 0) {
+          idleWaveElapsed = 0;
+          const x = host.clientWidth * (0.16 + Math.random() * 0.68);
+          const y = host.clientHeight * (0.18 + Math.random() * 0.5);
+          const angle = -0.08 + Math.random() * 0.16;
+          spawnRipple(x, y, 0.22 + Math.random() * 0.2, angle);
+        }
 
         ripples.forEach((ripple) => {
           if (!ripple.active) return;
@@ -942,7 +1040,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
             ripple.originY + ripple.driftY * drift * 0.92,
           );
           ripple.highlight.scale.set(scaleX * 0.92, scaleY * 0.95);
-          ripple.highlight.alpha = Math.min(0.16, envelope * 0.24);
+          ripple.highlight.alpha = Math.min(0.2, envelope * 0.3);
 
           if (progress >= 1) {
             ripple.active = false;
@@ -959,14 +1057,10 @@ function HeroWaterCanvas({ image }: { image: string }) {
 
         if (changedActiveState) {
           syncFilters();
-          if (activeFilterCount === 0) {
-            pixiApp.render();
-            pixiApp.ticker.stop();
-          }
         }
       });
       pixiApp.render();
-      pixiApp.ticker.stop();
+      pixiApp.ticker.start();
 
       resizeObserver = new ResizeObserver(fitHeroSprite);
       resizeObserver.observe(host);
@@ -998,7 +1092,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
   return <div ref={hostRef} className="hero-pixi-water" aria-hidden />;
 }
 
-function HomeHero() {
+function HomeHero({ onRegister }: { onRegister: () => void }) {
   const [active, setActive] = useState(0);
   const introDone = true;
   const activeSlide = homeSlides[active];
@@ -1020,6 +1114,24 @@ function HomeHero() {
       data-hero-section
       className="relative h-svh min-h-[620px] overflow-hidden bg-amali-dark"
     >
+      <svg aria-hidden className="pointer-events-none absolute size-0">
+        <filter id="hero-liquid-distortion">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.012 0.045"
+            numOctaves="2"
+            seed="7"
+            result="liquidNoise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="liquidNoise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </svg>
       <div className="hero-base-image absolute inset-0 z-10 overflow-hidden">
         {homeSlides.map((slide, index) => (
           <img
@@ -1056,6 +1168,14 @@ function HomeHero() {
       <HeroWaterCanvas image={activeSlide.image} />
       <div className="absolute inset-0 z-20 bg-black/25" />
       <div className="water-glass absolute inset-0 z-20 opacity-55" />
+      <div className="hero-floating-water absolute inset-0 z-[22]" aria-hidden>
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="absolute inset-x-0 bottom-0 z-20 hidden h-1/2 bg-gradient-to-t from-amali-dark/65 to-transparent md:block" />
 
       <div
@@ -1082,6 +1202,15 @@ function HomeHero() {
           <br />
           Excellence.
         </h2>
+        <div className="reveal-up mt-8 hidden items-center justify-center gap-4 md:flex">
+          <ArrowButton onClick={onRegister}>Get Free Quote</ArrowButton>
+          <Link
+            href="/home-designs"
+            className="focus-ring rounded-full border border-white/35 px-7 py-4 text-[13px] uppercase leading-none tracking-[1.5px] text-white backdrop-blur-[18px] transition-colors hover:bg-white hover:text-amali-dark"
+          >
+            Explore Home Designs
+          </Link>
+        </div>
       </div>
 
       <div
@@ -1134,7 +1263,15 @@ function HomeHero() {
             {String(homeSlides.length).padStart(2, "0")}
           </p>
         </div>
-        <ArrowButton href={activeSlide.href}>{activeSlide.cta}</ArrowButton>
+        <div className="flex flex-col items-start gap-3">
+          <ArrowButton onClick={onRegister}>Get Free Quote</ArrowButton>
+          <a
+            href={activeSlide.href}
+            className="focus-ring text-[12px] uppercase leading-none tracking-[1.4px] text-white/82 underline-offset-4 hover:text-white hover:underline"
+          >
+            {activeSlide.cta}
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -1405,7 +1542,7 @@ function FlyThroughSection({
   );
 }
 
-function HeroFlySequence() {
+function HeroFlySequence({ onRegister }: { onRegister: () => void }) {
   const sequenceRef = useRef<HTMLDivElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -1621,7 +1758,7 @@ function HeroFlySequence() {
   if (reducedMotion) {
     return (
       <>
-        <HomeHero />
+        <HomeHero onRegister={onRegister} />
         <FlyThroughSection />
       </>
     );
@@ -1637,7 +1774,7 @@ function HeroFlySequence() {
         className="hero-fly-pin sticky top-0 h-svh min-h-[620px] overflow-hidden"
       >
         <div className="hero-sequence-hero absolute inset-0 z-10 will-change-transform">
-          <HomeHero />
+          <HomeHero onRegister={onRegister} />
         </div>
         <FlyThroughSection mode="handoff" />
       </div>
@@ -1649,6 +1786,7 @@ function VisionSection() {
   return (
     <section
       id="vision"
+      data-water-transition
       className="relative overflow-hidden bg-amali-sand pb-24 pt-16 text-amali-dark md:pb-44 md:pt-28"
     >
       <video
@@ -1730,6 +1868,7 @@ function MapSection() {
   return (
     <section
       id="locations"
+      data-water-transition
       className="relative h-[560px] overflow-hidden bg-amali-sand text-white md:h-[600px] lg:h-[560px] xl:h-[620px]"
     >
       <picture className="absolute inset-0 block">
@@ -1745,15 +1884,16 @@ function MapSection() {
         />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-amali-sand" />
-      <div className="amali-container relative z-10 pt-10 md:pt-16">
+      <div className="amali-container sticky top-28 z-10 md:top-32 lg:top-36">
         <div className="mx-auto max-w-[930px] text-left md:text-center">
           <h2 className="reveal-up mb-4 text-[30px] font-light uppercase leading-[1.04] tracking-[1.3px] md:text-[42px] lg:text-[54px] lg:leading-[0.9]">
             Why build with King Style Homes
           </h2>
           <p className="reveal-up font-body max-w-[760px] text-[18px] leading-[24px] md:mx-auto md:text-[21px] md:leading-[27px]">
-            From tailored designs to transparent communication, our Sydney team
-            brings quality craftsmanship, local knowledge and practical guidance
-            to every stage of your home-building journey.
+            From tailored designs to transparent communication, our Western
+            Sydney and Northwest Sydney team brings quality craftsmanship, local
+            knowledge and practical guidance to every stage of your
+            home-building journey.
           </p>
         </div>
       </div>
@@ -1782,54 +1922,78 @@ function MapSection() {
 function TeasersSection() {
   return (
     <section
-      id="properties"
-      className="relative overflow-hidden rounded-b-[25px] bg-amali-sand pb-10 pt-12 text-amali-dark md:pt-16"
+      id="services"
+      data-water-transition
+      className="relative overflow-hidden bg-amali-dark pb-16 pt-20 text-white md:pb-28 md:pt-24"
     >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-amali-sand/45 via-amali-dark/70 to-amali-dark"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_4%,rgba(177,144,86,0.2),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.08),transparent_28%)]"
+        aria-hidden
+      />
       <div className="amali-container relative z-10 mb-10 md:mb-14">
         <div className="grid grid-cols-12 items-center gap-5">
           <div className="reveal-up col-span-12 md:col-span-7">
             <h2 className="text-[30px] font-light uppercase leading-[0.9] tracking-[0.9px] md:text-[44px] lg:text-[72px] lg:leading-[0.89]">
-              Home building
+              Services for
               <br />
-              <span className="font-normal">With purpose</span>
+              <span className="font-normal">Every build</span>
             </h2>
           </div>
           <div className="reveal-up col-span-12 md:col-span-5 lg:col-span-4 lg:col-start-9">
-            <p className="mb-5 text-[18px] font-light uppercase leading-[18px] tracking-[0.2px] lg:text-[20px] lg:leading-[20px]">
-              Explore tailored services for every stage of your build
+            <p className="mb-5 text-[18px] font-light uppercase leading-[18px] tracking-[0.2px] text-white/78 lg:text-[20px] lg:leading-[20px]">
+              Custom homes, duplex projects, granny flats, house and land,
+              renovations and turnkey delivery.
             </p>
-            <ArrowButton
-              tone="sand"
-              href="https://amaliproperties.com/about-amali/"
+            <a
+              href="/services"
+              className="focus-ring group inline-flex min-w-fit shrink-0 items-center gap-5 overflow-hidden rounded-[60px] border border-white/15 bg-white/12 py-2 pl-8 pr-2 text-white shadow-[0_18px_48px_rgba(0,0,0,0.2)] backdrop-blur-[18px] transition-transform duration-300 hover:scale-[1.02] hover:bg-white hover:text-amali-dark"
             >
-              Build with us
-            </ArrowButton>
+              <span className="relative z-10 whitespace-nowrap text-[12px] font-normal uppercase leading-none tracking-[1.6px] sm:text-[14px]">
+                Explore services
+              </span>
+              <span className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-amali-dark">
+                <ChevronRight aria-hidden className="size-4" strokeWidth={1.7} />
+              </span>
+            </a>
           </div>
         </div>
       </div>
-      <div className="px-5">
-        <div className="grid grid-cols-1 gap-4 overflow-hidden md:grid-cols-3 md:gap-0 md:rounded-b-[30px]">
-          {teaserCards.map((card) => (
+      <div className="relative z-10 px-5">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {services.map((card) => (
             <a
               key={card.title}
-              href={card.href}
-              className="focus-ring group relative overflow-hidden rounded-[15px] md:rounded-none"
+              href="/services"
+              data-luxury-card
+              className="focus-ring group relative overflow-hidden rounded-[24px] border border-white/10 bg-[#111820] text-white shadow-[0_22px_70px_rgba(0,0,0,0.28)]"
             >
-              <div className="relative aspect-[290/200] w-full overflow-hidden md:aspect-[455/600]">
-                <img
+              <div className="relative aspect-[290/210] w-full overflow-hidden md:aspect-[455/430]">
+                <Image
                   src={card.image}
-                  alt=""
-                  aria-hidden
-                  className="fill-media transition-transform duration-700 group-hover:scale-[1.12]"
+                  alt={card.title}
+                  fill
+                  sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.12]"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/55" />
-              <div className="absolute bottom-0 left-0 right-0 pb-7 text-center text-white md:pb-10">
-                <p className="mb-2 text-[14px] font-light uppercase leading-none tracking-[0.42px] opacity-45 md:text-[16px]">
-                  {card.eyebrow}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/84" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-8">
+                <p className="mb-3 text-[12px] font-light uppercase leading-none tracking-[1.5px] text-amali-sand/85">
+                  King Style Homes
                 </p>
-                <p className="text-[26px] font-light uppercase leading-none tracking-[0.8px] md:text-[42px] md:tracking-[1.28px]">
+                <p className="text-[25px] font-light uppercase leading-none tracking-[0.8px] md:text-[36px] md:tracking-[1.1px]">
                   {card.title}
+                </p>
+                <p className="font-body mt-4 max-w-[520px] text-[16px] leading-6 text-white/76">
+                  {card.text}
+                </p>
+                <p className="mt-6 inline-flex items-center gap-3 text-[12px] uppercase tracking-[1.5px] text-white">
+                  Explore service
+                  <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </p>
               </div>
             </a>
@@ -1840,9 +2004,163 @@ function TeasersSection() {
   );
 }
 
+function WhyKingStyleSection() {
+  return (
+    <section
+      data-water-transition
+      className="relative overflow-hidden bg-amali-dark px-5 py-20 text-white md:px-12 md:py-28"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(177,144,86,0.24),transparent_34%),radial-gradient(circle_at_82%_35%,rgba(255,255,255,0.09),transparent_30%)]" />
+      <div className="relative z-10 mx-auto max-w-[1560px]">
+        <div className="mb-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <h2 className="reveal-up text-[34px] font-light uppercase leading-[0.9] tracking-[1px] md:text-[58px] lg:text-[76px]">
+            Why King Style
+            <br />
+            Homes
+          </h2>
+          <p className="reveal-up font-body max-w-[820px] text-[18px] leading-7 text-white/72 md:text-[21px] md:leading-8">
+            A premium build should feel considered from the first conversation
+            through to handover. King Style Homes pairs local knowledge with
+            clear communication, crafted finishes and practical project
+            guidance.
+          </p>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {whyBuildItems.map((item, index) => (
+            <div
+              key={item}
+              data-luxury-card
+              className="reveal-up rounded-[26px] border border-white/10 bg-white/[0.06] p-6 backdrop-blur-[18px] md:p-7"
+            >
+              <p className="mb-10 text-[13px] uppercase tracking-[1.8px] text-amali-sand">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <h3 className="text-[24px] font-light uppercase leading-none tracking-[0.7px]">
+                {item}
+              </h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProcessSection() {
+  return (
+    <section
+      data-water-transition
+      className="relative overflow-hidden bg-amali-sand px-5 py-20 text-amali-dark md:px-12 md:py-28"
+    >
+      <div className="mx-auto max-w-[1560px]">
+        <div className="mb-12 grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <h2 className="reveal-up text-[34px] font-light uppercase leading-[0.9] tracking-[1px] md:text-[58px] lg:text-[76px]">
+            How it
+            <br />
+            works
+          </h2>
+          <p className="reveal-up font-body max-w-[760px] text-[18px] leading-7 text-amali-gray md:text-[21px] md:leading-8">
+            A simple, transparent pathway helps buyers understand what happens
+            next and reduces hesitation before the first enquiry.
+          </p>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-4">
+          {processSteps.map((step, index) => (
+            <article
+              key={step.title}
+              data-luxury-card
+              className="reveal-up rounded-[28px] bg-white p-7 shadow-[0_22px_70px_rgba(26,32,38,0.08)]"
+            >
+              <p className="mb-12 text-[13px] uppercase tracking-[1.8px] text-amali-slate">
+                Step {String(index + 1).padStart(2, "0")}
+              </p>
+              <h3 className="text-[28px] font-light uppercase leading-none tracking-[0.8px]">
+                {step.title}
+              </h3>
+              <p className="font-body mt-5 text-[16px] leading-7 text-amali-gray">
+                {step.text}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TestimonialsSection() {
+  return (
+    <section
+      data-water-transition
+      className="relative overflow-hidden bg-white px-5 py-20 text-amali-dark md:px-12 md:py-28"
+    >
+      <div className="mx-auto max-w-[1560px]">
+        <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <h2 className="reveal-up text-[34px] font-light uppercase leading-[0.9] tracking-[1px] md:text-[58px] lg:text-[76px]">
+            Client
+            <br />
+            words
+          </h2>
+          <p className="reveal-up max-w-[520px] text-[18px] font-light uppercase leading-[1.05] tracking-[0.6px] text-amali-gray">
+            Real feedback that reinforces quality, communication and
+            craftsmanship.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {testimonials.map((testimonial) => (
+            <blockquote
+              key={testimonial.name}
+              data-luxury-card
+              className="reveal-up rounded-[28px] bg-amali-sand/60 p-7"
+            >
+              <p className="font-body text-[18px] leading-7 text-amali-ink">
+                “{testimonial.quote}”
+              </p>
+              <cite className="mt-8 block text-[12px] not-italic uppercase tracking-[1.5px] text-amali-slate">
+                {testimonial.name}
+              </cite>
+            </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalLeadCta({ onRegister }: { onRegister: () => void }) {
+  return (
+    <section
+      data-water-transition
+      className="relative overflow-hidden rounded-b-[25px] bg-amali-sand px-5 py-20 text-amali-dark md:px-12 md:py-28"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(177,144,86,0.22),transparent_42%)]" />
+      <div className="reveal-up relative z-10 mx-auto flex max-w-[1200px] flex-col items-center rounded-[34px] bg-white/70 px-7 py-12 text-center shadow-[0_24px_80px_rgba(26,32,38,0.1)] backdrop-blur-[18px] md:px-14 md:py-16">
+        <p className="mb-5 text-[13px] uppercase tracking-[1.8px] text-amali-slate">
+          Start your build
+        </p>
+        <h2 className="max-w-[900px] text-[34px] font-light uppercase leading-[0.92] tracking-[1px] md:text-[58px]">
+          Ready to build in Western or Northwest Sydney?
+        </h2>
+        <p className="font-body mt-6 max-w-[680px] text-[18px] leading-7 text-amali-gray">
+          Share your site, timeline and design goals. King Style Homes can help
+          shape the next step with clarity.
+        </p>
+        <div className="mt-8">
+          <ArrowButton tone="dark" onClick={onRegister}>
+            Get Free Quote
+          </ArrowButton>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SiteFooter({ onRegister }: { onRegister: () => void }) {
   return (
-    <footer className="relative bg-amali-dark pb-16 pt-20 text-white md:pb-12">
+    <footer
+      data-water-transition
+      className="relative bg-amali-dark pb-16 pt-20 text-white md:pb-12"
+    >
       <div className="amali-container mb-12 md:mb-24">
         <div className="mb-16 flex justify-center">
           <Logo />
@@ -1856,7 +2174,7 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
                 with us
               </p>
               <ArrowButton tone="slate" onClick={onRegister}>
-                Get in touch
+                Get Free Quote
               </ArrowButton>
             </div>
           </div>
@@ -1868,8 +2186,8 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
             </h2>
             <div>
               {[
-                ["About Us", "https://amaliproperties.com/about-amali/"],
-                ["Get In Touch", "https://amaliproperties.com/contact/"],
+                ["About Us", "/about-us"],
+                ["Get In Touch", "/contact-us"],
               ].map(([label, href]) => (
                 <a
                   key={label}
@@ -1973,10 +2291,11 @@ function RegisterModal({
             id="register-title"
             className="text-[32px] font-light uppercase leading-none tracking-[1.7px] sm:text-[42px]"
           >
-            Get In Touch
+            Get a Free Quote
           </h2>
           <p className="font-body mt-5 text-[18px] font-light leading-[26px] text-amali-gray">
-            Tell us about the home you want to build.
+            Tell us about the home you want to build and the team will help
+            shape the next step.
           </p>
         </div>
 
@@ -1986,8 +2305,8 @@ function RegisterModal({
               Thank you
             </p>
             <p className="font-body mt-3 text-[17px] leading-7 text-amali-ink">
-              Your enquiry has been received. This clone keeps the form
-              frontend-only for now.
+              Your quote request has been received. The King Style Homes team
+              will be in touch with the next step.
             </p>
           </div>
         ) : (
@@ -2019,7 +2338,7 @@ function RegisterModal({
               className="focus-ring mt-8 inline-flex items-center gap-5 overflow-hidden rounded-full bg-amali-dark py-3 pl-8 pr-3 text-white transition-transform hover:scale-[1.02]"
             >
               <span className="text-[13px] uppercase tracking-[1.4px]">
-                Send enquiry
+                Request quote
               </span>
               <span className="flex size-9 items-center justify-center rounded-full bg-amali-slate">
                 <ChevronRight aria-hidden className="size-4" />
@@ -2049,11 +2368,16 @@ export default function AmaliLanding() {
         Skip to content
       </a>
       <Header onRegister={() => setModalOpen(true)} />
+      <FullPageWaterEffect />
       <main id="content" className="bg-amali-dark">
-        <HeroFlySequence />
+        <HeroFlySequence onRegister={() => setModalOpen(true)} />
         <VisionSection />
         <MapSection />
         <TeasersSection />
+        <WhyKingStyleSection />
+        <ProcessSection />
+        <TestimonialsSection />
+        <FinalLeadCta onRegister={() => setModalOpen(true)} />
       </main>
       <SiteFooter onRegister={() => setModalOpen(true)} />
       <RegisterModal open={modalOpen} onClose={() => setModalOpen(false)} />

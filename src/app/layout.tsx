@@ -5,7 +5,7 @@ const description =
   "King Style Homes designs and constructs custom homes that blend style, functionality, and exceptional craftsmanship.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://amaliproperties.com"),
+  metadataBase: new URL("https://kingstylehomes.com.au"),
   title: "Home - King Style Homes",
   description,
   openGraph: {
