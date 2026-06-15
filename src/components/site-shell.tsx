@@ -420,6 +420,19 @@ export function DesignGrid({ designs = homeDesigns }: { designs?: HomeDesign[] }
             <div className="absolute left-5 top-5 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-[11px] uppercase tracking-[1.3px] text-white backdrop-blur-md">
               {design.category}
             </div>
+            <div className="absolute right-5 top-5 flex size-16 items-center justify-center md:right-6 md:top-6 md:size-20">
+              <Image
+                src="/kingstyle-shield-transparent.png"
+                alt=""
+                width={76}
+                height={76}
+                className="h-16 w-16 object-contain md:h-20 md:w-20"
+                style={{
+                  filter:
+                    "contrast(1.18) saturate(1.08) drop-shadow(0 1px 1px rgba(255,255,255,0.72)) drop-shadow(0 10px 18px rgba(0,0,0,0.58))",
+                }}
+              />
+            </div>
             <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4 text-white">
               <h2 className="text-[32px] font-light uppercase leading-none tracking-[1px]">
                 {design.name}
@@ -442,10 +455,13 @@ export function DesignGrid({ designs = homeDesigns }: { designs?: HomeDesign[] }
 }
 
 export function DesignStats({ design }: { design: HomeDesign }) {
+  const formatCount = (count: number, singular: string) =>
+    `${count} ${count === 1 ? singular : `${singular}s`}`;
+
   const stats = [
-    [BedDouble, `${design.beds} beds`],
-    [Bath, `${design.baths} baths`],
-    [CarFront, `${design.cars} cars`],
+    [BedDouble, formatCount(design.beds, "bed")],
+    [Bath, formatCount(design.baths, "bath")],
+    [CarFront, formatCount(design.cars, "car")],
     [Ruler, design.frontage],
   ] as const;
 

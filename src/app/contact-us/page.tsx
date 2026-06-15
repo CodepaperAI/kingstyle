@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
-import { contactDetails, displayCenters, pageImages } from "@/data/site-content";
+import { contactDetails, pageImages } from "@/data/site-content";
 
 export const metadata: Metadata = { title: "Contact Us | King Style Homes" };
 
@@ -27,16 +27,6 @@ export default function ContactPage() {
                 <div key={item} className="rounded-2xl border border-amali-dark/10 bg-white/70 p-5">
                   <p className="text-[18px] font-light uppercase tracking-[0.5px]">{item}</p>
                 </div>
-              ))}
-            </div>
-            <div className="mt-10 grid gap-4">
-              <p className="font-body text-[12px] uppercase tracking-[1.4px] text-amali-slate">Visit our display centres</p>
-              {displayCenters.map((center) => (
-                <article data-luxury-card key={center.name} className="rounded-[26px] border border-amali-dark/10 bg-white p-6 shadow-[0_20px_70px_rgba(26,32,38,0.08)]">
-                  <h3 className="text-[24px] font-light uppercase">{center.name}</h3>
-                  <p className="font-body mt-3 text-[16px] leading-6 text-amali-gray">{center.address}</p>
-                  <p className="font-body mt-2 text-[13px] uppercase tracking-[1px] text-amali-slate">{center.phone}</p>
-                </article>
               ))}
             </div>
           </div>

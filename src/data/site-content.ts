@@ -406,14 +406,6 @@ export const testimonials = [
   },
 ];
 
-export const displayCenters = [
-  {
-    name: "HomeWorld Box Hill",
-    address: "20 - 22 Noah Street, Box Hill NSW",
-    phone: "1234567890",
-  },
-];
-
 export const contactDetails = {
   email: "info@kingstylehomes.com.au",
   phone: "0421000100",

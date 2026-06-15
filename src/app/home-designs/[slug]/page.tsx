@@ -78,7 +78,11 @@ export default async function HomeDesignPage({
       </SandSection>
       <SandSection className="pt-0">
         <h2 className="mb-8 text-[32px] font-light uppercase">Explore more designs</h2>
-        <DesignGrid designs={homeDesigns.filter((item) => item.slug !== design.slug).slice(0, 3)} />
+        <DesignGrid
+          designs={homeDesigns
+            .filter((item) => item.slug !== design.slug && item.category !== "Display Home")
+            .slice(0, 3)}
+        />
       </SandSection>
     </InteriorPage>
   );
