@@ -31,7 +31,7 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 const ASSET_BASE = "https://amaliproperties.com/wp-content";
-const HERO_IMAGE = "/hero-villa-screenshot.png";
+const HERO_IMAGE = "/kingstyle-home-hero.jpeg";
 const FLY_THROUGH_VIDEO = "/amali-fly-through.mp4";
 const KINGSTYLE_LOGO = "/kingstyle-logo-transparent.png";
 const KINGSTYLE_WORDMARK = "/kingstyle-logo-wordmark-transparent.png";
@@ -2118,6 +2118,7 @@ function TestimonialsSection() {
               </p>
               <cite className="mt-8 block text-[12px] not-italic uppercase tracking-[1.5px] text-amali-slate">
                 {testimonial.name}
+                {testimonial.projectType ? ` // ${testimonial.projectType}` : ""}
               </cite>
             </blockquote>
           ))}

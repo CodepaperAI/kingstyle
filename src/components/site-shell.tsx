@@ -511,6 +511,12 @@ export function ServicesGrid() {
             <p className="font-body text-[17px] leading-7 text-amali-gray">
               {service.text}
             </p>
+            <p className="font-body mt-5 rounded-2xl border border-amali-dark/10 bg-white/55 p-4 text-[14px] leading-6 text-amali-gray">
+              <span className="mb-2 block text-[10px] uppercase tracking-[1.3px] text-amali-slate">
+                Best for
+              </span>
+              {service.bestFor}
+            </p>
             <div className="mt-7 grid gap-2">
               {service.details.map((detail) => (
                 <span
@@ -521,6 +527,9 @@ export function ServicesGrid() {
                 </span>
               ))}
             </div>
+            <p className="font-body mt-5 border-t border-amali-dark/10 pt-5 text-[14px] leading-6 text-amali-gray">
+              {service.outcome}
+            </p>
             <Link
               href="/contact-us"
               className="mt-auto inline-flex items-center justify-between border-t border-amali-dark/10 pt-6 text-[12px] uppercase tracking-[1.4px] text-amali-dark"

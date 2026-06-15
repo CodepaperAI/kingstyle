@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
-import { pageImages, processSteps, testimonials, whyBuildItems } from "@/data/site-content";
+import { pageImages, processSteps, testimonials, trustProofItems, whyBuildItems } from "@/data/site-content";
 
 export const metadata: Metadata = { title: "About Us | King Style Homes" };
 
@@ -54,6 +54,39 @@ export default function AboutPage() {
         </div>
       </SandSection>
       <SandSection className="pt-0">
+        <div className="mb-10 grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+          <div>
+            <p className="font-body mb-5 text-[12px] uppercase tracking-[2px] text-amali-slate">
+              Proof points
+            </p>
+            <h2 className="text-[36px] font-light uppercase leading-none md:text-[58px]">
+              Clear reasons to trust the process.
+            </h2>
+          </div>
+          <p className="font-body max-w-[820px] text-[18px] leading-7 text-amali-gray">
+            The King Style story should be grounded in useful, verifiable
+            promises: local focus, site-aware planning, inclusions clarity and
+            a guided path to handover.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {trustProofItems.map((item) => (
+            <article
+              data-luxury-card
+              key={item.title}
+              className="rounded-[26px] border border-amali-dark/10 bg-white p-7 shadow-[0_20px_70px_rgba(26,32,38,0.07)]"
+            >
+              <h3 className="text-[23px] font-light uppercase leading-none tracking-[0.6px]">
+                {item.title}
+              </h3>
+              <p className="font-body mt-5 text-[16px] leading-7 text-amali-gray">
+                {item.text}
+              </p>
+            </article>
+          ))}
+        </div>
+      </SandSection>
+      <SandSection className="pt-0">
         <div className="mb-10 grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
           <h2 className="text-[38px] font-light uppercase leading-none md:text-[58px]">Why build with King Style Homes?</h2>
           <p className="font-body text-[18px] leading-7 text-amali-gray">
@@ -70,7 +103,7 @@ export default function AboutPage() {
       </SandSection>
       <SandSection className="pt-0">
         <h2 className="mb-10 text-[38px] font-light uppercase leading-none md:text-[58px]">Our process</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {processSteps.map((step, index) => (
             <article data-luxury-card key={step.title} className="rounded-2xl bg-white p-7">
               <p className="font-body text-[12px] text-amali-slate">{String(index + 1).padStart(2, "0")}</p>
@@ -86,7 +119,10 @@ export default function AboutPage() {
           {testimonials.map((testimonial) => (
             <blockquote data-luxury-card key={testimonial.name} className="rounded-2xl bg-white p-7">
               <p className="font-body text-[18px] leading-7 text-amali-gray">“{testimonial.quote}”</p>
-              <cite className="font-body mt-6 block text-[12px] not-italic uppercase tracking-[1.2px] text-amali-slate">{testimonial.name}</cite>
+              <cite className="font-body mt-6 block text-[12px] not-italic uppercase tracking-[1.2px] text-amali-slate">
+                {testimonial.name}
+                {testimonial.projectType ? ` // ${testimonial.projectType}` : ""}
+              </cite>
             </blockquote>
           ))}
         </div>

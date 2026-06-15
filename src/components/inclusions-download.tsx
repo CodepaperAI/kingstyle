@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import Image from "next/image";
 import { ArrowDownToLine, Check, X } from "lucide-react";
 import { inclusionFeatureItems, inclusionGroups } from "@/data/site-content";
 
@@ -12,6 +13,7 @@ export function InclusionsDownload({ variant }: { variant: DownloadVariant }) {
   const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const title = variant === "signature" ? "Signature Inclusions" : "Standard Inclusions";
+  const coverLabel = variant === "signature" ? "Signature" : "Standard";
 
   const downloadText = useMemo(() => {
     const lines = [
@@ -76,7 +78,7 @@ export function InclusionsDownload({ variant }: { variant: DownloadVariant }) {
   return (
     <>
       <section data-luxury-section className="luxury-section bg-amali-dark px-5 py-16 text-white md:px-12 md:py-20">
-        <div data-luxury-card className="download-pack-panel mx-auto grid max-w-[1560px] gap-8 rounded-[28px] border border-white/12 bg-white/[0.06] p-7 shadow-2xl backdrop-blur-xl md:grid-cols-[1fr_auto] md:items-center md:p-10">
+        <div data-luxury-card className="download-pack-panel mx-auto grid max-w-[1560px] gap-8 rounded-[28px] border border-white/12 bg-white/[0.06] p-7 shadow-2xl backdrop-blur-xl lg:grid-cols-[0.95fr_0.9fr_auto] lg:items-center md:p-10">
           <div>
             <p className="font-body text-[12px] uppercase tracking-[1.8px] text-amali-sand">
               Download
@@ -88,10 +90,53 @@ export function InclusionsDownload({ variant }: { variant: DownloadVariant }) {
               Enter your details to download the inclusions and specifications pack. This helps the King Style Homes team follow up with the right information for your build.
             </p>
           </div>
+          <div className="relative mx-auto aspect-[0.72] w-full max-w-[330px] overflow-hidden rounded-[20px] border border-[#a88343]/45 bg-[#11100d] shadow-[0_30px_90px_rgba(0,0,0,0.45)]">
+            <div className="absolute inset-3 rounded-[12px] border border-[#9c7738]/35" />
+            <div className="absolute inset-6 rounded-[8px] border border-[#9c7738]/30" />
+            <div className="absolute left-8 right-8 top-10 aspect-[1.46] border border-[#d5ae61]/75 bg-[#2b261f]">
+              <div className="absolute inset-x-0 top-[46%] h-px bg-[#6f604b]/45" />
+              <div className="absolute left-[10%] right-[10%] top-[45%] h-[16%] border-t-4 border-[#746854]/55" />
+              <div className="absolute bottom-[32%] left-[18%] h-[16%] w-[19%] border border-[#5c5144]/50" />
+              <div className="absolute bottom-[32%] left-[39%] h-[16%] w-[19%] border border-[#5c5144]/50" />
+              <div className="absolute bottom-[32%] right-[18%] h-[16%] w-[19%] border border-[#5c5144]/50" />
+              <div className="absolute left-[22%] top-[8%] h-[15%] w-[22%] rounded-full bg-[#6a5a3d]/20" />
+              <div className="absolute right-[22%] top-[8%] h-[15%] w-[22%] rounded-full bg-[#6a5a3d]/20" />
+              <div className="absolute left-[41%] top-0 h-full w-px bg-[#d5ae61]/45" />
+              <div className="absolute right-[41%] top-0 h-full w-px bg-[#d5ae61]/45" />
+              <div className="absolute left-[41%] top-[34%] size-5 -translate-x-1/2 rounded-full border-4 border-[#6e5b38] bg-[#b29358]" />
+              <div className="absolute right-[41%] top-[34%] size-5 translate-x-1/2 rounded-full border-4 border-[#6e5b38] bg-[#b29358]" />
+            </div>
+            <div className="absolute inset-x-10 top-[47%] grid justify-items-center text-center">
+              <div className="relative mb-5 size-16">
+                <Image
+                  src="/kingstyle-shield-transparent.png"
+                  alt=""
+                  fill
+                  sizes="64px"
+                  className="object-contain opacity-90"
+                />
+              </div>
+              <span className="text-[11px] uppercase tracking-[7px] text-[#c29a55]">
+                Kingstyle Homes
+              </span>
+              <div className="mt-5 h-px w-full bg-[#84673b]" />
+            </div>
+            <div className="absolute inset-x-8 bottom-[14%] text-center text-[#c19a58]">
+              <span className="block text-[32px] font-light uppercase leading-[1.05] tracking-[8px] md:text-[38px]">
+                {coverLabel}
+              </span>
+              <span className="mt-2 block text-[25px] font-light uppercase leading-[1.15] tracking-[7px] md:text-[30px]">
+                Inclusions
+              </span>
+              <span className="font-body mt-8 block text-[9px] uppercase tracking-[4px] text-[#8f743f]">
+                Quality - Craftsmanship - Distinction
+              </span>
+            </div>
+          </div>
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="download-pack-button inline-flex items-center justify-center gap-3 rounded-full bg-amali-sand px-7 py-4 text-[12px] uppercase tracking-[1.3px] text-amali-dark transition-transform hover:scale-[1.02]"
+            className="download-pack-button inline-flex items-center justify-center gap-3 rounded-full bg-amali-sand px-7 py-4 text-[12px] uppercase tracking-[1.3px] text-amali-dark transition-transform hover:scale-[1.02] lg:justify-self-end"
           >
             Download now
             <ArrowDownToLine className="size-4" strokeWidth={1.6} />
