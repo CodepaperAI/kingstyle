@@ -546,16 +546,16 @@ export function DesignGrid({ designs = homeDesigns }: { designs?: HomeDesign[] }
             <div className="absolute left-5 top-5 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-[11px] uppercase tracking-[1.3px] text-white backdrop-blur-md">
               {design.category}
             </div>
-            <div className="absolute right-5 top-5 flex size-14 items-center justify-center md:right-6 md:top-6 md:size-[68px]">
+            <div className="absolute right-5 top-5 flex size-11 items-center justify-center md:right-6 md:top-6 md:size-14">
               <Image
                 src="/kingstyle-shield-transparent.png"
                 alt=""
-                width={68}
-                height={68}
-                className="h-14 w-14 object-contain md:h-[68px] md:w-[68px]"
+                width={56}
+                height={56}
+                className="h-11 w-11 object-contain md:h-14 md:w-14"
                 style={{
                   filter:
-                    "contrast(1.12) saturate(1.04) drop-shadow(0 1px 1px rgba(255,255,255,0.55)) drop-shadow(0 8px 14px rgba(0,0,0,0.42))",
+                    "contrast(1.08) saturate(1.02) drop-shadow(0 1px 1px rgba(255,255,255,0.45)) drop-shadow(0 5px 9px rgba(0,0,0,0.34))",
                 }}
               />
             </div>
