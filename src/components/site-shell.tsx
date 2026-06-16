@@ -13,6 +13,7 @@ import {
   homeDesigns,
   inclusionFeatureItems,
   inclusionGroups,
+  servicePath,
   services,
 } from "@/data/site-content";
 
@@ -31,6 +32,45 @@ const inclusionLinks = [
   ["Signature Inclusions", "/signature-inclusions"],
 ] as const;
 
+const serviceLinks = services.map((service) => ({
+  label: service.title,
+  href: servicePath(service),
+}));
+
+const socialLinks = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/kingstyle_homes/",
+    Icon: InstagramIcon,
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/kingstylehomes/",
+    Icon: FacebookIcon,
+  },
+] as const;
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="4" y="4" width="16" height="16" rx="5" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="12" cy="12" r="3.6" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="16.8" cy="7.2" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M14.25 8.7h2.1V5.2h-2.75c-3.05 0-4.65 1.75-4.65 4.55v2.05H6.75v3.65h2.2V21h3.85v-5.55h3.05l.55-3.65h-3.6V10.1c0-.95.45-1.4 1.45-1.4Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export function InteriorHeader() {
   return (
     <header data-luxury-header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-8 md:pt-6">
@@ -47,7 +87,33 @@ export function InteriorHeader() {
         </Link>
         <nav className="hidden items-center gap-5 text-[11px] uppercase tracking-[1.2px] lg:flex">
           {navigation.map(([label, href]) => (
-            label === "Inclusions" ? (
+            label === "Services" ? (
+              <details key={href} className="group relative">
+                <summary className="flex cursor-pointer list-none items-center gap-2 transition-opacity hover:opacity-55">
+                  <span>{label}</span>
+                  <span className="text-[13px] leading-none transition-transform group-open:rotate-180">
+                    ˅
+                  </span>
+                </summary>
+                <div className="absolute left-1/2 top-8 grid w-72 -translate-x-1/2 gap-1 rounded-xl border border-white/10 bg-amali-dark/95 p-3 shadow-2xl backdrop-blur-xl">
+                  <Link
+                    href="/services"
+                    className="rounded-lg px-3 py-3 text-[11px] uppercase tracking-[1.2px] text-amali-sand hover:bg-white/10"
+                  >
+                    Services overview
+                  </Link>
+                  {serviceLinks.map((child) => (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      className="rounded-lg px-3 py-3 text-[11px] uppercase leading-tight tracking-[1.2px] hover:bg-white/10"
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              </details>
+            ) : label === "Inclusions" ? (
               <details key={href} className="group relative">
                 <summary className="flex cursor-pointer list-none items-center gap-2 transition-opacity hover:opacity-55">
                   <span>{label}</span>
@@ -81,7 +147,24 @@ export function InteriorHeader() {
             </summary>
             <nav className="absolute right-0 top-12 grid w-56 gap-1 rounded-xl border border-white/10 bg-amali-dark/95 p-3 shadow-2xl backdrop-blur-xl">
               {navigation.map(([label, href]) => (
-                label === "Inclusions" ? (
+                label === "Services" ? (
+                  <div key={href} className="rounded-lg px-3 py-3">
+                    <Link href="/services" className="text-[11px] uppercase tracking-[1.2px]">
+                      {label}
+                    </Link>
+                    <div className="mt-2 grid gap-1 border-l border-white/15 pl-3">
+                      {serviceLinks.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="py-2 text-[10px] uppercase leading-tight tracking-[1.1px] text-white/72 hover:text-white"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : label === "Inclusions" ? (
                   <div key={href} className="rounded-lg px-3 py-3">
                     <p className="text-[11px] uppercase tracking-[1.2px]">{label}</p>
                     <div className="mt-2 grid gap-1 border-l border-white/15 pl-3">
@@ -106,8 +189,36 @@ export function InteriorHeader() {
                   </Link>
                 )
               ))}
+              <div className="mt-2 flex gap-2 border-t border-white/10 pt-3">
+                {socialLinks.map(({ label, href, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`King Style Homes on ${label}`}
+                    className="flex size-10 items-center justify-center rounded-full border border-white/15 text-white hover:bg-white hover:text-amali-dark"
+                  >
+                    <Icon className="size-4" />
+                  </a>
+                ))}
+              </div>
             </nav>
           </details>
+          <div className="hidden items-center gap-2 md:flex">
+            {socialLinks.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`King Style Homes on ${label}`}
+                className="flex size-10 items-center justify-center rounded-full border border-white/15 text-white transition-colors hover:bg-white hover:text-amali-dark"
+              >
+                <Icon className="size-4" />
+              </a>
+            ))}
+          </div>
           <Link
             href="/contact-us"
             className="hidden rounded-full bg-amali-sand px-4 py-3 text-[11px] uppercase tracking-[1.2px] text-amali-dark sm:block"
@@ -204,6 +315,21 @@ export function InteriorFooter() {
               {label}
             </Link>
           ))}
+          <div className="col-span-2 mt-3 flex flex-wrap gap-3">
+            {socialLinks.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`King Style Homes on ${label}`}
+                className="inline-flex items-center gap-3 rounded-full border border-white/20 px-4 py-3 text-[11px] uppercase tracking-[1.1px] transition-colors hover:bg-white hover:text-amali-dark"
+              >
+          <Icon className="size-4" />
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
       <div className="mx-auto mt-8 flex max-w-[1560px] flex-col justify-between gap-3 text-[12px] text-white/55 md:flex-row">
@@ -420,16 +546,16 @@ export function DesignGrid({ designs = homeDesigns }: { designs?: HomeDesign[] }
             <div className="absolute left-5 top-5 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-[11px] uppercase tracking-[1.3px] text-white backdrop-blur-md">
               {design.category}
             </div>
-            <div className="absolute right-5 top-5 flex size-16 items-center justify-center md:right-6 md:top-6 md:size-20">
+            <div className="absolute right-5 top-5 flex size-14 items-center justify-center md:right-6 md:top-6 md:size-[68px]">
               <Image
                 src="/kingstyle-shield-transparent.png"
                 alt=""
-                width={76}
-                height={76}
-                className="h-16 w-16 object-contain md:h-20 md:w-20"
+                width={68}
+                height={68}
+                className="h-14 w-14 object-contain md:h-[68px] md:w-[68px]"
                 style={{
                   filter:
-                    "contrast(1.18) saturate(1.08) drop-shadow(0 1px 1px rgba(255,255,255,0.72)) drop-shadow(0 10px 18px rgba(0,0,0,0.58))",
+                    "contrast(1.12) saturate(1.04) drop-shadow(0 1px 1px rgba(255,255,255,0.55)) drop-shadow(0 8px 14px rgba(0,0,0,0.42))",
                 }}
               />
             </div>
@@ -502,7 +628,7 @@ export function ServicesGrid() {
               <p className="font-body text-[12px] uppercase tracking-[1.6px] text-amali-sand">
                 King Style Homes
               </p>
-              <h2 className="mt-3 break-words text-[27px] font-light uppercase leading-[0.98] tracking-[0.7px] text-white sm:text-[34px]">
+              <h2 className="mt-3 break-words text-[26px] font-light uppercase leading-[0.95] tracking-[0.7px] text-white sm:text-[30px]">
                 {service.title}
               </h2>
             </div>
@@ -531,10 +657,10 @@ export function ServicesGrid() {
               {service.outcome}
             </p>
             <Link
-              href="/contact-us"
+              href={servicePath(service)}
               className="mt-auto inline-flex items-center justify-between border-t border-amali-dark/10 pt-6 text-[12px] uppercase tracking-[1.4px] text-amali-dark"
             >
-              Discuss this service
+              View service details
               <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
             </Link>
           </div>
@@ -548,20 +674,28 @@ export function InclusionList({ signature = false }: { signature?: boolean }) {
   return (
     <div className="space-y-12">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {inclusionFeatureItems.map((item, index) => (
-          <div
-            data-luxury-reveal
-            key={item}
-            className="rounded-[24px] border border-amali-dark/10 bg-white/70 p-6 shadow-[0_18px_60px_rgba(26,32,38,0.06)] backdrop-blur"
-          >
-            <span className="font-body text-[12px] text-amali-slate">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <p className="mt-8 text-[18px] font-light uppercase leading-tight tracking-[0.5px]">
-              {signature ? item.replace("Premium", "Signature") : item}
-            </p>
-          </div>
-        ))}
+        {inclusionFeatureItems.map((item, index) => {
+          const displayItem = signature
+            ? item
+                .replace("2740mm high ceilings", "3000mm high ceilings")
+                .replace("Premium", "Signature")
+            : item;
+
+          return (
+            <div
+              data-luxury-reveal
+              key={item}
+              className="rounded-[24px] border border-amali-dark/10 bg-white/70 p-6 shadow-[0_18px_60px_rgba(26,32,38,0.06)] backdrop-blur"
+            >
+              <span className="font-body text-[12px] text-amali-slate">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <p className="mt-8 text-[18px] font-light uppercase leading-tight tracking-[0.5px]">
+                {displayItem}
+              </p>
+            </div>
+          );
+        })}
       </div>
       <div className="grid gap-5 md:grid-cols-2">
         {inclusionGroups.map((group) => (

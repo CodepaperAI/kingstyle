@@ -11,7 +11,7 @@ export default function ContactPage() {
         eyebrow="Contact"
         title="Speak with the experts"
         intro="Have questions or ready to start your home-building journey? King Style Homes can guide you from initial design through to project completion."
-        image={pageImages.displayFeature}
+        image={pageImages.contactHero}
       />
       <SandSection>
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">

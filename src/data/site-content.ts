@@ -27,6 +27,18 @@ export type Service = {
   outcome: string;
 };
 
+export function serviceSlug(service: Pick<Service, "title">) {
+  return service.title
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+export function servicePath(service: Pick<Service, "title">) {
+  return `/services/${serviceSlug(service)}`;
+}
+
 export type InclusionGroup = {
   title: string;
   items: string[];
@@ -240,10 +252,10 @@ export const homeDesigns: HomeDesign[] = [
     slug: "sydney-tce",
     name: "Sydney TCE",
     category: "Display Home",
-    beds: 4,
-    baths: 3,
-    cars: 1,
-    frontage: "8.650m",
+    beds: 5,
+    baths: 4,
+    cars: 2,
+    frontage: "11.500m",
     image: `${KSH_UPLOADS}/2025/04/image9.jpg`,
     summary: "The King Style display-home experience, showcasing premium finishes, practical planning and detailed craftsmanship.",
     description:
@@ -258,7 +270,7 @@ export const services: Service[] = [
   {
     title: "Custom Home Builds",
     text: "Design and build your dream home with an expert team guiding the process from early ideas through approvals, construction and handover.",
-    image: `${KSH_UPLOADS}/2025/04/img11.jpg`,
+    image: "/kingstyle-home-hero.jpeg",
     details: ["Bespoke layouts", "Design guidance", "Construction management"],
     bestFor: "Clients who want a home shaped around their block, lifestyle and finish expectations.",
     included: ["Briefing and design direction", "Facade and layout guidance", "Approvals pathway coordination", "Selections and construction support"],
@@ -266,29 +278,29 @@ export const services: Service[] = [
     outcome: "A buildable custom home direction with clearer decisions from early concept through handover.",
   },
   {
-    title: "Duplex & Multi-Dwelling Projects",
-    text: "Maximise the potential of your property with carefully planned duplex and multi-dwelling solutions.",
-    image: `${KSH_UPLOADS}/2025/04/Duplex.jpg`,
-    details: ["Site potential review", "Multi-dwelling planning", "Development-focused delivery"],
+    title: "Knockdown & Rebuild Duplex Projects",
+    text: "Specialist guidance for duplex and multi-dwelling projects, from site review through planning, approvals and construction.",
+    image: "/amali-villa-evening-entrance.jpeg",
+    details: ["Knockdown rebuild planning", "Multi-dwelling guidance", "Development-focused delivery"],
     bestFor: "Owners who want to unlock more value from a block through a carefully planned multi-dwelling outcome.",
     included: ["Site potential review", "Dwelling mix and layout guidance", "Approval and compliance coordination", "Build delivery planning"],
     siteConsiderations: "Frontage, access, services, privacy, parking and council controls are considered early so the proposal stays realistic.",
     outcome: "A clearer pathway for creating multiple homes on one site without losing practical liveability.",
   },
   {
-    title: "Granny Flat Services",
-    text: "Create a functional, stylish extra dwelling for family, guests or rental income with a smooth design-to-build process.",
-    image: `${KSH_UPLOADS}/2025/04/image9.jpg`,
-    details: ["Secondary dwelling design", "Council coordination", "Compact living expertise"],
-    bestFor: "Families adding flexible space for relatives, guests, independent living or future rental income.",
-    included: ["Secondary dwelling planning", "Compact layout guidance", "Approval coordination", "Selections and construction delivery"],
-    siteConsiderations: "The existing home, access, services, privacy and outdoor space need to work together before the flat is finalised.",
-    outcome: "A smaller dwelling that feels considered, functional and connected to the wider property.",
+    title: "Project Management & Overseas Procurement",
+    text: "End-to-end project management support, including planning, procurement, supplier coordination, logistics, installation and turnkey delivery.",
+    image: "/display-centers/16-3OCT2024-6-43-r.jpg",
+    details: ["Project planning", "Procurement coordination", "Turnkey delivery"],
+    bestFor: "Clients who want procurement, finishes and project delivery coordinated through one accountable pathway.",
+    included: ["Planning and procurement support", "Supplier coordination", "Logistics and installation guidance", "Handover preparation"],
+    siteConsiderations: "Budget, timing, sourcing, installation and delivery expectations should be clarified early so procurement supports the build rather than slowing it down.",
+    outcome: "A coordinated project delivery pathway that keeps procurement, installation and construction decisions aligned.",
   },
   {
     title: "House and Land Packages",
     text: "Simplify the path to a new home with curated design and land opportunities that suit modern family living.",
-    image: `${KSH_UPLOADS}/2025/04/image5.jpg`,
+    image: "/display-centers/28-3OCT2024-6-78-r.jpg",
     details: ["Design and land pairing", "Budget clarity", "Streamlined selections"],
     bestFor: "Buyers who want the land and home direction considered together from the start.",
     included: ["Design and land pairing", "Package guidance", "Budget and inclusion review", "Selections pathway support"],
@@ -298,7 +310,7 @@ export const services: Service[] = [
   {
     title: "Renovations & Extensions",
     text: "Transform an existing home through considered upgrades, added space and refined detailing.",
-    image: `${KSH_UPLOADS}/2025/04/image3.jpg`,
+    image: "/display-centers/18-3OCT2024-6-60-r.jpg",
     details: ["Extensions", "Whole-home renovations", "Improved flow and amenity"],
     bestFor: "Owners who like their location but need more space, better flow or a more refined finish.",
     included: ["Existing-home review", "Extension and renovation planning", "Material and finish guidance", "Construction coordination"],
@@ -306,14 +318,14 @@ export const services: Service[] = [
     outcome: "A refreshed home that better supports the way the household lives now.",
   },
   {
-    title: "Turn-Key Solutions",
-    text: "Move into a fully finished home with approvals, construction, finishes, landscaping and handover coordinated for you.",
-    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_01.jpg`,
-    details: ["Approvals to handover", "Finishes coordination", "Ready-to-live delivery"],
-    bestFor: "Clients who want a more complete path to a move-in ready home with fewer loose ends.",
-    included: ["Approvals coordination", "Construction management", "Finish and fixture selections", "Handover preparation"],
-    siteConsiderations: "Allowances, inclusions, external works and handover expectations should be clarified early for a smoother delivery.",
-    outcome: "A completed home experience with design, selections and delivery coordinated through one process.",
+    title: "Granny Flats",
+    text: "Create a functional, stylish extra dwelling for family, guests or rental income with a smooth design-to-build process.",
+    image: "/amali-villa-evening-front.jpeg",
+    details: ["Secondary dwelling design", "Council coordination", "Compact living expertise"],
+    bestFor: "Families adding flexible space for relatives, guests, independent living or future rental income.",
+    included: ["Secondary dwelling planning", "Compact layout guidance", "Approval coordination", "Selections and construction delivery"],
+    siteConsiderations: "The existing home, access, services, privacy and outdoor space need to work together before the flat is finalised.",
+    outcome: "A smaller dwelling that feels considered, functional and connected to the wider property.",
   },
 ];
 
@@ -378,7 +390,7 @@ export const trustProofItems: TrustProof[] = [
 ];
 
 export const inclusionFeatureItems = [
-  "Up to 3300mm high ceilings on both floors",
+  "2740mm high ceilings on both floors",
   "Mono stringer floating stairs with LED lights",
   "Premium appliances",
   "Solid core internal doors",
@@ -568,4 +580,5 @@ export const pageImages = {
   displayFeature: "https://kingstylehomes.com.au/wp-content/themes/kingstylehomes/assets/images/blog-image2.jpg",
   servicesHero: `${KSH_UPLOADS}/2025/04/img11.jpg`,
   inclusionsHero: `${KSH_UPLOADS}/2025/04/6.4.jpg`,
+  contactHero: "/amali-villa-evening-entrance.jpeg",
 };

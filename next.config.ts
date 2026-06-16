@@ -7,11 +7,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "amaliproperties.com",
-        pathname: "/wp-content/uploads/**",
-      },
-      {
-        protocol: "https",
         hostname: "kingstylehomes.com.au",
         pathname: "/wp-content/uploads/**",
       },

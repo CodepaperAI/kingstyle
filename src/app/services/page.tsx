@@ -3,18 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { InteriorHero, InteriorPage, SandSection, ServicesGrid } from "@/components/site-shell";
-import { capabilities, pageImages, services } from "@/data/site-content";
+import { capabilities, pageImages, servicePath, serviceSlug, services } from "@/data/site-content";
 
 export const metadata: Metadata = { title: "Services | King Style Homes" };
 
 export default function ServicesPage() {
   const serviceAnchors = services.map((service) => ({
-    id: service.title
-      .toLowerCase()
-      .replace(/&/g, "and")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, ""),
+    id: serviceSlug(service),
     label: service.title,
+    href: servicePath(service),
   }));
 
   return (
@@ -72,13 +69,13 @@ export default function ServicesPage() {
           className="mb-10 flex gap-3 overflow-x-auto rounded-[26px] border border-amali-dark/10 bg-white/60 p-3 shadow-[0_18px_60px_rgba(26,32,38,0.05)]"
         >
           {serviceAnchors.map((item) => (
-            <a
+            <Link
               key={item.id}
-              href={`#${item.id}`}
+              href={item.href}
               className="font-body shrink-0 rounded-full border border-amali-dark/10 bg-amali-sand/80 px-5 py-3 text-[11px] uppercase tracking-[1.2px] text-amali-slate transition-colors hover:bg-white hover:text-amali-dark"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <ServicesGrid />
@@ -128,7 +125,7 @@ export default function ServicesPage() {
                   <p className="font-body text-[12px] uppercase tracking-[1.7px] text-amali-slate">
                     Best for
                   </p>
-                  <h3 className="mt-4 text-[30px] font-light uppercase leading-none md:text-[46px]">
+                  <h3 className="mt-4 text-[28px] font-light uppercase leading-[0.98] md:text-[40px]">
                     {service.title}
                   </h3>
                   <p className="font-body mt-6 text-[17px] leading-7 text-amali-gray">
@@ -148,10 +145,10 @@ export default function ServicesPage() {
                     ))}
                   </div>
                   <Link
-                    href="/contact-us"
+                    href={servicePath(service)}
                     className="mt-8 inline-flex w-fit items-center gap-4 rounded-full bg-amali-dark py-3 pl-6 pr-3 text-[12px] uppercase tracking-[1.4px] text-white"
                   >
-                    Discuss this pathway
+                    View service landing page
                     <span className="flex size-9 items-center justify-center rounded-full bg-white text-amali-dark">
                       <ArrowUpRight className="size-4" strokeWidth={1.6} />
                     </span>

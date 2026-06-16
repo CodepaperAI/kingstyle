@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     siteName: "King Style Homes",
     images: [
       {
-        url: "https://amaliproperties.com/wp-content/uploads/2026/03/View-8_Penthouse-1.jpg",
-        width: 912,
-        height: 697,
+        url: "/kingstyle-home-hero.jpeg",
+        width: 1600,
+        height: 900,
         alt: "King Style Homes custom home building",
       },
     ],
@@ -28,9 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Home - King Style Homes",
     description,
-    images: [
-      "https://amaliproperties.com/wp-content/uploads/2026/03/View-8_Penthouse-1.jpg",
-    ],
+    images: ["/kingstyle-home-hero.jpeg"],
   },
 };
 

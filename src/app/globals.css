@@ -27,7 +27,7 @@
   font-style: normal;
   font-weight: 250;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/AvianoSans-Thin.ttf")
+  src: url("/fonts/AvianoSans-Thin.ttf")
     format("truetype");
 }
 
@@ -36,7 +36,7 @@
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/AvianoSans-Light.woff2")
+  src: url("/fonts/AvianoSans-Light.woff2")
     format("woff2");
 }
 
@@ -45,7 +45,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/AvianoSans-Reg.otf")
+  src: url("/fonts/AvianoSans-Reg.otf")
     format("opentype");
 }
 
@@ -54,7 +54,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/AvianoSans-Bol.otf")
+  src: url("/fonts/AvianoSans-Bol.otf")
     format("opentype");
 }
 
@@ -63,7 +63,7 @@
   font-style: normal;
   font-weight: 200;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/din-2014_extra-light.woff2")
+  src: url("/fonts/din-2014_extra-light.woff2")
     format("woff2");
 }
 
@@ -72,7 +72,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/romantically.woff2")
+  src: url("/fonts/romantically.woff2")
     format("woff2");
 }
 
@@ -81,7 +81,7 @@
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/din-2014_light.woff2")
+  src: url("/fonts/din-2014_light.woff2")
     format("woff2");
 }
 
@@ -90,7 +90,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("https://amaliproperties.com/wp-content/themes/AmaliProperties/assets/fonts/din-2014_demi.woff2")
+  src: url("/fonts/din-2014_demi.woff2")
     format("woff2");
 }
 

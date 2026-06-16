@@ -23,6 +23,7 @@ import lottie, { AnimationItem } from "lottie-web";
 import { ChevronRight, Volume2, VolumeX, X } from "lucide-react";
 import {
   processSteps,
+  servicePath,
   services,
   testimonials,
   whyBuildItems,
@@ -30,22 +31,18 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ASSET_BASE = "https://amaliproperties.com/wp-content";
 const HERO_IMAGE = "/kingstyle-home-hero.jpeg";
 const FLY_THROUGH_VIDEO = "/amali-fly-through.mp4";
 const KINGSTYLE_LOGO = "/kingstyle-logo-transparent.png";
 const KINGSTYLE_WORDMARK = "/kingstyle-logo-wordmark-transparent.png";
-const WHY_BUILD_BACKGROUND =
-  "https://images.pexels.com/photos/8830259/pexels-photo-8830259.jpeg?auto=compress&cs=tinysrgb&w=2400";
-
 const villaGalleryImages = [
   {
-    src: "/amali-villa-evening-front.jpeg",
-    alt: "Illuminated modern white home exterior at dusk",
+    src: "/house2_beige.jpg",
+    alt: "Curved modern King Style home exterior illuminated at dusk",
   },
   {
-    src: "/amali-villa-evening-entrance.jpeg",
-    alt: "Modern home facade with arched windows illuminated at dusk",
+    src: "/house1_beige.jpg",
+    alt: "Modern King Style home facade with arched windows at dusk",
   },
 ];
 
@@ -58,84 +55,45 @@ const homeSlides = [
   },
 ];
 
-const visionImages = [
+const socialLinks = [
   {
-    src: villaGalleryImages[0].src,
-    className: "reveal-up col-span-12 md:col-span-5 md:pt-10 lg:pt-16",
-    frame: "aspect-[1600/855]",
+    label: "Instagram",
+    href: "https://www.instagram.com/kingstyle_homes/",
+    Icon: InstagramIcon,
   },
   {
-    src: `${ASSET_BASE}/uploads/2025/06/Copy-of-olga-thelavart-1nrY9CLAGcI-unsplash-1.png.webp`,
-    className:
-      "col-span-3 col-start-10 md:col-span-2 md:col-start-11 -mt-16 md:-mt-24",
-    frame: "aspect-[265/360]",
+    label: "Facebook",
+    href: "https://www.facebook.com/kingstylehomes/",
+    Icon: FacebookIcon,
   },
-  {
-    src: `${ASSET_BASE}/uploads/2025/06/Copy-of-Screenshot-2023-12-10-at-8.41.15-PM-1.png.webp`,
-    className: "col-span-3 md:col-span-2",
-    frame: "aspect-[190/260]",
-  },
-  {
-    src: villaGalleryImages[1].src,
-    className: "reveal-up col-span-12 md:col-span-7 md:col-start-6",
-    frame: "aspect-[1600/820]",
-  },
-];
+] as const;
 
-const mapHotspots = [
-  { label: "Tailored To You", left: "33%", top: "56%", align: "top" },
-  { label: "Quality Builds", left: "62%", top: "43%", align: "bottom" },
-  { label: "Clear Process", left: "48%", top: "67%", align: "top" },
-  { label: "Local Knowledge", left: "74%", top: "58%", align: "top" },
-];
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="4" y="4" width="16" height="16" rx="5" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="12" cy="12" r="3.6" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="16.8" cy="7.2" r="1" fill="currentColor" />
+    </svg>
+  );
+}
 
-const menuGroups = [
-  {
-    label: "Home Designs",
-    href: "/home-designs",
-    links: [
-      {
-        label: "Explore our designs",
-        href: "/home-designs",
-      },
-    ],
-  },
-  {
-    label: "Services",
-    href: "/services",
-    links: [
-      {
-        label: "Custom home builds",
-        href: "/services",
-      },
-      {
-        label: "House and land packages",
-        href: "/services",
-      },
-      {
-        label: "Renovations and extensions",
-        href: "/services",
-      },
-    ],
-  },
-  {
-    label: "Inclusions",
-    href: "/standard-inclusions",
-    links: [
-      {
-        label: "Standard inclusions",
-        href: "/standard-inclusions",
-      },
-      {
-        label: "Signature inclusions",
-        href: "/signature-inclusions",
-      },
-    ],
-  },
-];
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M14.25 8.7h2.1V5.2h-2.75c-3.05 0-4.65 1.75-4.65 4.55v2.05H6.75v3.65h2.2V21h3.85v-5.55h3.05l.55-3.65h-3.6V10.1c0-.95.45-1.4 1.45-1.4Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
 
-const singleLinks = [
-  { label: "Display Centers", href: "/display-centers" },
+const mainMenuLinks = [
+  { label: "Home Designs", href: "/home-designs" },
+  { label: "Display Centres", href: "/display-centers" },
+  { label: "Standard Inclusions", href: "/standard-inclusions" },
+  { label: "Signature Inclusions", href: "/signature-inclusions" },
   { label: "Contact Us", href: "/contact-us" },
 ];
 
@@ -144,20 +102,20 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://amaliproperties.com/",
-      url: "https://amaliproperties.com/",
+      "@id": "https://kingstylehomes.com.au/",
+      url: "https://kingstylehomes.com.au/",
       name: "Home - King Style Homes",
       description:
         "King Style Homes designs and constructs custom homes that blend style, functionality, and exceptional craftsmanship.",
       inLanguage: "en-AU",
-      isPartOf: { "@id": "https://amaliproperties.com/#website" },
-      thumbnailUrl: `${ASSET_BASE}/uploads/2026/03/View-8_Penthouse-1.jpg`,
+      isPartOf: { "@id": "https://kingstylehomes.com.au/#website" },
+      thumbnailUrl: "https://kingstylehomes.com.au/kingstyle-home-hero.jpeg",
     },
     {
       "@type": "Organization",
-      "@id": "https://amaliproperties.com/#organization",
+      "@id": "https://kingstylehomes.com.au/#organization",
       name: "King Style Homes",
-      url: "https://amaliproperties.com/",
+      url: "https://kingstylehomes.com.au/",
       logo: KINGSTYLE_LOGO,
     },
   ],
@@ -232,28 +190,17 @@ function Logo({
     return (
       <Link
         href="/"
-        className="focus-ring pointer-events-auto flex items-center gap-2.5 transition-[opacity,transform] duration-300 hover:scale-[1.015] hover:opacity-90"
+        className="focus-ring pointer-events-auto block transition-[opacity,transform] duration-300 hover:scale-[1.015] hover:opacity-90"
         title="King Style Homes"
       >
-        <span className="relative block size-[46px] shrink-0 overflow-hidden sm:size-[52px]">
-          <Image
-            src={KINGSTYLE_LOGO}
-            alt=""
-            width={1800}
-            height={1266}
-            quality={100}
-            className="absolute left-1/2 top-0 h-auto w-[146px] max-w-none -translate-x-1/2 sm:w-[166px]"
-            preload
-          />
-        </span>
-        <span className="relative block h-[32px] w-[116px] sm:h-[38px] sm:w-[138px]">
+        <span className="relative block h-[38px] w-[150px] sm:h-[46px] sm:w-[182px]">
           <Image
             src={KINGSTYLE_WORDMARK}
             alt="King Style Homes"
             fill
-            sizes="138px"
+            sizes="182px"
             quality={100}
-            className="object-contain drop-shadow-[0_1px_4px_rgba(0,0,0,0.55)]"
+            className="object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.48)]"
             preload
           />
         </span>
@@ -400,7 +347,6 @@ function ArrowButton({
 
 function Header({ onRegister }: { onRegister: () => void }) {
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState("Home Designs");
   const [onLightSection, setOnLightSection] = useState(false);
   const useDarkHeader = onLightSection && !open;
 
@@ -477,7 +423,7 @@ function Header({ onRegister }: { onRegister: () => void }) {
             </button>
           </div>
         </div>
-        <div className="pointer-events-auto absolute left-1/2 top-4 -translate-x-1/2 rounded-xl border border-white/10 bg-[#201b16]/72 px-3 py-2 shadow-[0_6px_20px_rgba(0,0,0,0.18)] backdrop-blur-md lg:top-8">
+        <div className="pointer-events-auto absolute left-1/2 top-4 -translate-x-1/2 lg:top-8">
           <Logo dark={useDarkHeader} full floating />
         </div>
         <div className="pointer-events-auto ml-auto hidden lg:block">
@@ -486,79 +432,75 @@ function Header({ onRegister }: { onRegister: () => void }) {
       </header>
 
       <nav
-        className={`fixed left-5 top-20 z-50 max-h-[calc(100dvh-100px)] w-[calc(100vw-40px)] overflow-auto rounded-[40px] bg-white/20 px-6 pb-10 pt-12 text-white backdrop-blur-[24px] transition-all duration-500 lg:left-10 lg:top-24 lg:w-auto lg:min-w-[480px] lg:px-16 lg:pb-14 ${
+        className={`fixed left-5 right-5 top-20 z-50 max-h-[calc(100dvh-100px)] overflow-auto rounded-[28px] border border-white/12 bg-amali-dark/72 p-5 text-white shadow-[0_30px_120px_rgba(0,0,0,0.35)] backdrop-blur-[26px] transition-all duration-500 sm:p-7 lg:left-10 lg:right-auto lg:top-24 lg:w-[760px] ${
           open
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-4 opacity-0"
         }`}
       >
-        <ul className="flex flex-col gap-5 whitespace-nowrap">
-          {menuGroups.map((group) => (
-            <li key={group.label} className="overflow-hidden">
-              <button
-                type="button"
-                className="focus-ring flex w-full items-center justify-between gap-12 text-left text-[28px] font-light uppercase leading-[0.9] tracking-[1.14px] transition-opacity hover:opacity-70 sm:text-[38px] lg:text-[50px]"
-                onClick={() =>
-                  setExpanded((value) =>
-                    value === group.label ? "" : group.label,
-                  )
-                }
+        <div className="grid gap-7 lg:grid-cols-[0.82fr_1.18fr]">
+          <div>
+            <p className="font-body mb-4 text-[11px] uppercase tracking-[1.8px] text-amali-sand">
+              Menu
+            </p>
+            <ul className="grid gap-2">
+              {mainMenuLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="focus-ring flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-4 text-[17px] font-light uppercase leading-none tracking-[1px] transition-colors hover:bg-white hover:text-amali-dark sm:text-[20px]"
+                  >
+                    {link.label}
+                    <ChevronRight className="size-4" strokeWidth={1.5} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-[24px] border border-white/10 bg-white/[0.07] p-4 sm:p-5">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <p className="font-body text-[11px] uppercase tracking-[1.8px] text-amali-sand">
+                Services
+              </p>
+              <Link
+                href="/services"
+                onClick={() => setOpen(false)}
+                className="focus-ring font-body text-[11px] uppercase tracking-[1.2px] text-white/70 hover:text-white"
               >
-                <span>{group.label}</span>
-                <span className="relative size-6 shrink-0">
-                  <span className="absolute left-0 top-1/2 h-px w-full bg-white" />
-                  <span
-                    className={`absolute left-1/2 top-0 h-full w-px bg-white transition-transform duration-300 ${
-                      expanded === group.label ? "rotate-90" : ""
-                    }`}
-                  />
-                </span>
-              </button>
-              <div
-                className={`grid transition-[grid-template-rows,opacity] duration-300 ${
-                  expanded === group.label
-                    ? "grid-rows-[1fr] opacity-100"
-                    : "grid-rows-[0fr] opacity-0"
-                }`}
-              >
-                <ul className="font-body min-h-0 space-y-3 overflow-hidden pt-4 text-[16px] font-light leading-none tracking-[0.42px]">
-                  {group.links.map((link) => (
-                    <li key={link.label}>
-                      <a
-                        href={link.href}
-                        className="focus-ring relative inline-block after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-white after:transition-transform hover:after:scale-x-100"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </li>
+                View all
+              </Link>
+            </div>
+            <ul className="grid gap-2 sm:grid-cols-2">
+              {services.map((service) => (
+                <li key={service.title}>
+                  <Link
+                    href={servicePath(service)}
+                    onClick={() => setOpen(false)}
+                    className="focus-ring block rounded-2xl border border-white/10 px-4 py-3 text-[12px] uppercase leading-tight tracking-[1px] text-white/84 transition-colors hover:bg-white hover:text-amali-dark"
+                  >
+                    {service.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="mt-6 flex flex-wrap gap-3 border-t border-white/12 pt-5">
+          {socialLinks.map(({ label, href, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`King Style Homes on ${label}`}
+              className="focus-ring font-body flex items-center gap-3 rounded-full border border-white/20 px-4 py-3 text-[12px] uppercase tracking-[1px] text-white/84 transition-colors hover:bg-white hover:text-amali-dark"
+            >
+              <Icon className="size-4" />
+              {label}
+            </a>
           ))}
-        </ul>
-        <div className="my-6 h-px bg-white/20" />
-        <ul className="space-y-4 text-[28px] font-light uppercase leading-none tracking-[1.14px] lg:text-[36px]">
-          {singleLinks.map((link) => (
-            <li key={link.label}>
-              <a
-                href={link.href}
-                className="focus-ring transition-opacity hover:opacity-60"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <a
-          href="https://www.instagram.com/amaliproperties/"
-          className="focus-ring font-body mt-9 flex items-center gap-3 text-[15px] tracking-[0.4px]"
-        >
-          <span className="flex size-10 items-center justify-center rounded-full border border-white">
-            IG
-          </span>
-          King Style Homes
-        </a>
+        </div>
       </nav>
     </>
   );
@@ -1440,30 +1382,6 @@ function FlyThroughSection({
               : "absolute left-1/2 top-1/2 aspect-square w-[170vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(218,208,193,0.55)_0%,rgba(255,255,255,0)_64%)]"
           }
         />
-        <img
-          src={`${ASSET_BASE}/uploads/2025/04/4dfe4c0468a937bf2545685b9b6f3f49-1.png`}
-          alt=""
-          aria-hidden
-          loading="eager"
-          decoding="async"
-          className={
-            isHandoff
-              ? "cloud-a absolute -left-[18vw] -top-[6vh] z-10 w-[102vw] opacity-[0.18] md:w-[74vw]"
-              : "cloud-a absolute -left-[15vw] top-[10vh] w-[72vw] opacity-10 md:w-[50vw]"
-          }
-        />
-        <img
-          src={`${ASSET_BASE}/uploads/2025/04/4dfe4c0468a937bf2545685b9b6f3f49-1.png`}
-          alt=""
-          aria-hidden
-          loading="eager"
-          decoding="async"
-          className={
-            isHandoff
-              ? "cloud-b absolute -right-[24vw] bottom-[-10vh] z-10 w-[110vw] -scale-x-100 opacity-[0.2] md:w-[82vw]"
-              : "cloud-b absolute -right-[28vw] bottom-[8vh] w-[90vw] -scale-x-100 opacity-10 md:w-[58vw]"
-          }
-        />
         <div
           className={`fly-title absolute left-1/2 z-40 w-[86%] max-w-[980px] -translate-x-1/2 -translate-y-1/2 text-center ${
             isHandoff
@@ -1490,7 +1408,7 @@ function FlyThroughSection({
           }
         >
           <img
-            src={`${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`}
+            src={HERO_IMAGE}
             alt=""
             aria-hidden
             loading="eager"
@@ -1504,7 +1422,7 @@ function FlyThroughSection({
             autoPlay={false}
             loop
             preload="auto"
-            poster={`${ASSET_BASE}/uploads/2025/08/Aerial-View-03-3-3.png`}
+            poster={HERO_IMAGE}
           >
             <source
               src={FLY_THROUGH_VIDEO}
@@ -1787,76 +1705,68 @@ function VisionSection() {
     <section
       id="vision"
       data-water-transition
-      className="relative overflow-hidden bg-amali-sand pb-24 pt-16 text-amali-dark md:pb-44 md:pt-28"
+      className="relative overflow-hidden bg-amali-sand px-5 py-20 text-amali-dark md:px-12 md:py-28"
     >
-      <video
-        className="fill-media opacity-[0.05]"
-        muted
-        playsInline
-        autoPlay
-        loop
-      >
-        <source
-          src={`${ASSET_BASE}/uploads/2025/05/leaf-sway-test.mp4`}
-          type="video/mp4"
-        />
-      </video>
-      <div className="amali-container relative z-10">
-        <div className="mb-12 grid grid-cols-12 gap-x-3 gap-y-8 md:mb-16 md:gap-x-6">
-          <div className={visionImages[0].className}>
-            <div className={`image-frame ${visionImages[0].frame}`}>
-              <img
-                src={visionImages[0].src}
-                alt=""
-                aria-hidden
-                className="fill-media"
-                style={{ transform: "none" }}
-              />
-            </div>
-          </div>
-          <div className="reveal-up col-span-12 md:col-span-6 md:col-start-7 md:pt-20">
-            <h2 className="mb-4 max-w-[760px] text-[32px] font-light uppercase leading-none tracking-[1.32px] md:text-[44px] md:leading-[0.88]">
-              Building homes, creating legacies
-            </h2>
-            <p className="font-body max-w-[720px] text-[20px] leading-[27px] md:text-[21px]">
-              King Style Homes creates spaces that go beyond walls and ceilings
-              to become the backdrop of cherished memories. With personalized
-              designs and meticulous craftsmanship, every home is shaped around
-              the families who live in it.
-            </p>
-          </div>
-          <div className="reveal-up col-span-4 col-start-9 -mt-16 md:col-span-1 md:col-start-12 md:-mt-24">
-            <div className="image-frame aspect-[265/360]">
-              <img
-                src={visionImages[1].src}
-                alt=""
-                aria-hidden
-                className="fill-media"
-              />
-            </div>
-          </div>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_0%,rgba(255,255,255,0.68),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(177,144,86,0.14),transparent_28%)]" />
+      <div className="relative z-10 mx-auto max-w-[1560px]">
+        <div className="mb-12 max-w-[860px]">
+          <p className="reveal-up mb-5 font-body text-[12px] uppercase tracking-[2px] text-amali-slate">
+            King Style story
+          </p>
+          <h2 className="reveal-up text-[34px] font-light uppercase leading-[0.92] tracking-[1px] md:text-[58px] lg:text-[70px]">
+            Building homes, creating legacies
+          </h2>
         </div>
-        <div className="grid grid-cols-12 gap-x-3 gap-y-8 md:gap-x-6">
-          <div className="reveal-up col-span-3 md:col-span-2">
-            <div className="image-frame aspect-[190/260]">
-              <img
-                src={visionImages[2].src}
-                alt=""
-                aria-hidden
-                className="fill-media"
+        <div className="grid gap-5">
+          <div className="grid overflow-hidden rounded-[32px] border border-amali-dark/10 bg-white/58 shadow-[0_24px_90px_rgba(26,32,38,0.08)] backdrop-blur lg:grid-cols-[1fr_0.82fr]">
+            <figure className="reveal-up relative min-h-[320px] overflow-hidden md:min-h-[500px]">
+              <Image
+                src={villaGalleryImages[0].src}
+                alt={villaGalleryImages[0].alt}
+                fill
+                sizes="(min-width: 1024px) 56vw, 100vw"
+                className="object-cover"
               />
+            </figure>
+            <div className="reveal-up flex flex-col justify-center p-7 md:p-10 lg:p-12">
+              <p className="font-body mb-5 text-[12px] uppercase tracking-[1.8px] text-amali-slate">
+                Personal design
+              </p>
+              <h3 className="text-[30px] font-light uppercase leading-none tracking-[0.8px] md:text-[46px]">
+                Designed around the way families live.
+              </h3>
+              <p className="font-body mt-6 text-[17px] leading-7 text-amali-gray md:text-[19px] md:leading-8">
+                King Style Homes creates spaces that go beyond walls and
+                ceilings to become the backdrop of cherished memories. Every
+                brief is shaped around lifestyle, site conditions and the
+                details that make a home feel personal.
+              </p>
             </div>
           </div>
-          <div className={visionImages[3].className}>
-            <div className={`image-frame ${visionImages[3].frame}`}>
-              <img
-                src={visionImages[3].src}
-                alt=""
-                aria-hidden
-                className="fill-media"
-                style={{ transform: "none" }}
-              />
+          <div className="grid overflow-hidden rounded-[32px] border border-amali-dark/10 bg-white/58 shadow-[0_24px_90px_rgba(26,32,38,0.08)] backdrop-blur lg:grid-cols-[0.82fr_1fr]">
+            <div className="reveal-up flex flex-col justify-center p-7 md:p-10 lg:p-12">
+              <p className="font-body mb-5 text-[12px] uppercase tracking-[1.8px] text-amali-slate">
+                Crafted finish
+              </p>
+              <h3 className="text-[30px] font-light uppercase leading-none tracking-[0.8px] md:text-[46px]">
+                Architecture with warmth, scale and detail.
+              </h3>
+              <p className="font-body mt-6 text-[17px] leading-7 text-amali-gray md:text-[19px] md:leading-8">
+                From facade proportion to interior selections, the build is
+                guided by meticulous craftsmanship and a clear process, giving
+                clients confidence from early design through construction and
+                handover.
+              </p>
             </div>
+            <figure className="reveal-up relative min-h-[320px] overflow-hidden md:min-h-[500px] lg:order-last">
+              <Image
+                src={villaGalleryImages[1].src}
+                alt={villaGalleryImages[1].alt}
+                fill
+                sizes="(min-width: 1024px) 56vw, 100vw"
+                className="object-cover"
+              />
+            </figure>
           </div>
         </div>
       </div>
@@ -1869,52 +1779,56 @@ function MapSection() {
     <section
       id="locations"
       data-water-transition
-      className="relative h-[560px] overflow-hidden bg-amali-sand text-white md:h-[600px] lg:h-[560px] xl:h-[620px]"
+      className="relative overflow-hidden bg-amali-dark px-5 py-20 text-white md:px-12 md:py-28"
     >
       <picture className="absolute inset-0 block">
         <source
           media="(min-width: 1024px)"
-          srcSet={WHY_BUILD_BACKGROUND}
+          srcSet={HERO_IMAGE}
         />
         <img
-          src={WHY_BUILD_BACKGROUND}
+          src={HERO_IMAGE}
           alt=""
           aria-hidden
-          className="fill-media scale-[1.04] object-center"
+          className="fill-media scale-[1.04] object-center opacity-62"
         />
       </picture>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-amali-sand" />
-      <div className="amali-container sticky top-28 z-10 md:top-32 lg:top-36">
-        <div className="mx-auto max-w-[930px] text-left md:text-center">
-          <h2 className="reveal-up mb-4 text-[30px] font-light uppercase leading-[1.04] tracking-[1.3px] md:text-[42px] lg:text-[54px] lg:leading-[0.9]">
-            Why build with King Style Homes
-          </h2>
-          <p className="reveal-up font-body max-w-[760px] text-[18px] leading-[24px] md:mx-auto md:text-[21px] md:leading-[27px]">
+      <div className="absolute inset-0 bg-gradient-to-b from-amali-dark/78 via-amali-dark/64 to-amali-dark" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_8%,rgba(177,144,86,0.24),transparent_30%),radial-gradient(circle_at_82%_42%,rgba(255,255,255,0.12),transparent_32%)]" />
+      <div className="amali-container relative z-10">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <div>
+            <p className="reveal-up mb-5 font-body text-[12px] uppercase tracking-[2px] text-amali-sand">
+              Why build with us
+            </p>
+            <h2 className="reveal-up text-[34px] font-light uppercase leading-[0.95] tracking-[1px] md:text-[52px] lg:text-[68px]">
+              Why build with King Style Homes
+            </h2>
+          </div>
+          <p className="reveal-up font-body max-w-[760px] text-[18px] leading-7 text-white/74 md:text-[21px] md:leading-8">
             From tailored designs to transparent communication, our Western
             Sydney and Northwest Sydney team brings quality craftsmanship, local
             knowledge and practical guidance to every stage of your
             home-building journey.
           </p>
         </div>
-      </div>
-      {mapHotspots.map((point) => (
-        <div
-          key={point.label}
-          className="map-point absolute z-20 hidden -translate-x-1/2 -translate-y-1/2 md:block"
-          style={{ left: point.left, top: point.top }}
-        >
-          <span className="mx-auto block size-[10px] rounded-full bg-white shadow-[0_0_0_8px_rgba(255,255,255,0.18)]" />
-          <span
-            className={`absolute left-1/2 w-max -translate-x-1/2 text-center text-[18px] uppercase leading-none tracking-[1.8px] ${
-              point.align === "top"
-                ? "bottom-[calc(100%+15px)]"
-                : "top-[calc(100%+15px)]"
-            }`}
-          >
-            {point.label}
-          </span>
+        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {["Tailored to you", "Quality builds", "Clear process", "Local knowledge"].map((item, index) => (
+            <div
+              key={item}
+              data-luxury-card
+              className="reveal-up rounded-[24px] border border-white/10 bg-white/[0.08] p-6 backdrop-blur-[18px]"
+            >
+              <p className="font-body mb-8 text-[12px] uppercase tracking-[1.6px] text-amali-sand">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <h3 className="text-[20px] font-light uppercase leading-tight tracking-[0.8px]">
+                {item}
+              </h3>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </section>
   );
 }
@@ -1948,7 +1862,7 @@ function TeasersSection() {
               Custom homes, duplex projects, granny flats, house and land,
               renovations and turnkey delivery.
             </p>
-            <a
+            <Link
               href="/services"
               className="focus-ring group inline-flex min-w-fit shrink-0 items-center gap-5 overflow-hidden rounded-[60px] border border-white/15 bg-white/12 py-2 pl-8 pr-2 text-white shadow-[0_18px_48px_rgba(0,0,0,0.2)] backdrop-blur-[18px] transition-transform duration-300 hover:scale-[1.02] hover:bg-white hover:text-amali-dark"
             >
@@ -1958,16 +1872,16 @@ function TeasersSection() {
               <span className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-amali-dark">
                 <ChevronRight aria-hidden className="size-4" strokeWidth={1.7} />
               </span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
       <div className="relative z-10 px-5">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map((card) => (
-            <a
+            <Link
               key={card.title}
-              href="/services"
+              href={servicePath(card)}
               data-luxury-card
               className="focus-ring group relative overflow-hidden rounded-[24px] border border-white/10 bg-[#111820] text-white shadow-[0_22px_70px_rgba(0,0,0,0.28)]"
             >
@@ -1981,14 +1895,14 @@ function TeasersSection() {
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/84" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-8">
+              <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-7">
                 <p className="mb-3 text-[12px] font-light uppercase leading-none tracking-[1.5px] text-amali-sand/85">
                   King Style Homes
                 </p>
-                <p className="text-[25px] font-light uppercase leading-none tracking-[0.8px] md:text-[36px] md:tracking-[1.1px]">
+                <p className="text-[24px] font-light uppercase leading-[0.95] tracking-[0.8px] md:text-[30px] lg:text-[34px] lg:tracking-[1px]">
                   {card.title}
                 </p>
-                <p className="font-body mt-4 max-w-[520px] text-[16px] leading-6 text-white/76">
+                <p className="font-body mt-4 max-w-[520px] text-[15px] leading-6 text-white/78 md:text-[16px]">
                   {card.text}
                 </p>
                 <p className="mt-6 inline-flex items-center gap-3 text-[12px] uppercase tracking-[1.5px] text-white">
@@ -1996,7 +1910,7 @@ function TeasersSection() {
                   <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </p>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -2204,6 +2118,21 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
                 </a>
               ))}
             </div>
+            <div className="mt-7 flex flex-wrap gap-3">
+              {socialLinks.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`King Style Homes on ${label}`}
+                  className="focus-ring inline-flex items-center gap-3 rounded-full border border-white/18 px-4 py-3 text-[12px] uppercase tracking-[1px] transition-colors hover:bg-white hover:text-amali-dark"
+                >
+                  <Icon className="size-4" />
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -2211,16 +2140,10 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
         <div className="flex flex-col items-center justify-between gap-5 text-center text-[13px] leading-none tracking-[0.64px] lg:flex-row lg:text-left">
           <p>King Style Homes 2026. All rights reserved.</p>
           <div className="flex flex-col items-center gap-2 lg:flex-row lg:gap-5">
-            <a href="https://amaliproperties.com/terms-conditions/">
-              Terms &amp; Conditions
-            </a>
-            <a href="https://amaliproperties.com/privacy-policy/">
-              Privacy Policy
-            </a>
-            <a href="https://amaliproperties.com/cookies-policy/">
-              Cookies Policy
-            </a>
-            <a href="https://amaliproperties.com/credits/">Credits</a>
+            <span>Terms &amp; Conditions</span>
+            <span>Privacy Policy</span>
+            <span>Cookies Policy</span>
+            <span>Credits</span>
           </div>
         </div>
       </div>
@@ -2362,12 +2285,6 @@ export default function AmaliLanding() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <a
-        href="#content"
-        className="focus-ring sr-only focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-[100] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-amali-dark"
-      >
-        Skip to content
-      </a>
       <Header onRegister={() => setModalOpen(true)} />
       <FullPageWaterEffect />
       <main id="content" className="bg-amali-dark">

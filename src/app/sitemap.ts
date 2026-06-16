@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { homeDesigns } from "@/data/site-content";
+import { homeDesigns, servicePath, services } from "@/data/site-content";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://kingstylehomes.com.au";
@@ -28,6 +28,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
+    ...services.map((service) => ({
+      url: `${baseUrl}${servicePath(service)}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
   ];
 }
-
