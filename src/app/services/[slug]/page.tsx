@@ -4,7 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
-import { servicePath, serviceSlug, services } from "@/data/site-content";
+import { servicePath, serviceSlug, services, suburbs } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
+import {
+  breadcrumbSchema,
+  homeBuilderSchema,
+  serviceSchema,
+} from "@/lib/schema";
+import { jsonLd } from "@/lib/utils";
 
 type ServicePageProps = {
   params: Promise<{ slug: string }>;
@@ -20,6 +27,8 @@ export function generateStaticParams() {
   }));
 }
 
+export const dynamicParams = false;
+
 export async function generateMetadata({
   params,
 }: ServicePageProps): Promise<Metadata> {
@@ -27,15 +36,22 @@ export async function generateMetadata({
   const service = getService(slug);
 
   if (!service) {
-    return {
-      title: "Service Not Found | King Style Homes",
-    };
+    return { title: "Service Not Found | King Style Homes" };
   }
 
-  return {
-    title: `${service.title} | King Style Homes`,
+  return buildMetadata({
+    path: servicePath(service),
+    title: `${service.title} in Western Sydney | King Style Homes`,
     description: service.text,
-  };
+    image: service.image,
+    imageAlt: service.title,
+    keywords: [
+      service.title.toLowerCase(),
+      `${service.title.toLowerCase()} western sydney`,
+      `${service.title.toLowerCase()} sydney`,
+      "king style homes",
+    ],
+  });
 }
 
 export default async function ServiceDetailPage({ params }: ServicePageProps) {
@@ -50,6 +66,20 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
 
   return (
     <InteriorPage>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd([
+            homeBuilderSchema(),
+            serviceSchema(service),
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Services", path: "/services" },
+              { name: service.title, path: servicePath(service) },
+            ]),
+          ]),
+        }}
+      />
       <InteriorHero
         eyebrow="Service landing page"
         title={service.title}
@@ -151,6 +181,39 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
               ))}
             </div>
           </div>
+        </div>
+      </SandSection>
+      <SandSection className="pt-0">
+        <div className="mb-10 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+          <div>
+            <p className="font-body mb-5 text-[12px] uppercase tracking-[2px] text-amali-slate">
+              Available in
+            </p>
+            <h2 className="text-[36px] font-light uppercase leading-none md:text-[58px]">
+              {service.title} across Western Sydney.
+            </h2>
+          </div>
+          <p className="font-body max-w-[820px] text-[18px] leading-7 text-amali-gray">
+            See suburb-specific information for {service.title.toLowerCase()} in the King Style
+            service area.
+          </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {suburbs.map((suburb) => (
+            <Link
+              key={suburb.slug}
+              href={`${servicePath(service)}/${suburb.slug}`}
+              className="group flex items-center justify-between gap-3 rounded-2xl border border-amali-dark/10 bg-white/70 px-5 py-4 text-amali-dark transition-colors hover:bg-amali-dark hover:text-white"
+            >
+              <span className="font-body text-[14px] uppercase tracking-[1px]">
+                {service.title.split(" ")[0]} in {suburb.name}
+                <span className="font-body block text-[10px] tracking-[1.2px] text-amali-slate group-hover:text-amali-sand">
+                  {suburb.postcode} · {suburb.lga}
+                </span>
+              </span>
+              <ArrowUpRight className="size-4" strokeWidth={1.6} />
+            </Link>
+          ))}
         </div>
       </SandSection>
       <SandSection className="bg-amali-dark text-white">

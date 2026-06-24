@@ -747,8 +747,21 @@ export function SandSection({
   children: React.ReactNode;
   className?: string;
 }) {
+  // Skip the default bg/text utilities if the caller's className already
+  // provides them — otherwise both classes end up in the class list and
+  // Tailwind's specificity ordering is unreliable.
+  const overridesBg = /(^|\s)bg-/.test(className);
+  const overridesTextColor = /(^|\s)text-(amali|white|black|gray|slate|neutral|stone|zinc|red|green|blue|yellow|orange|pink|purple|indigo|teal|cyan|emerald|lime|fuchsia|rose|sky|violet|amber)/.test(
+    className,
+  );
+  const bgClass = overridesBg ? "" : "bg-amali-sand";
+  const textClass = overridesTextColor ? "" : "text-amali-dark";
+
   return (
-    <section data-luxury-section className={`luxury-section relative overflow-hidden bg-amali-sand px-5 py-16 text-amali-dark md:px-12 md:py-24 ${className}`}>
+    <section
+      data-luxury-section
+      className={`luxury-section relative overflow-hidden ${bgClass} px-5 py-16 ${textClass} md:px-12 md:py-24 ${className}`}
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(255,255,255,0.6),transparent_30%),radial-gradient(circle_at_88%_12%,rgba(177,144,86,0.13),transparent_28%)]" />
       <div className="relative z-10 mx-auto max-w-[1560px]">{children}</div>
     </section>

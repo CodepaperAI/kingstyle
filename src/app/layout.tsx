@@ -1,35 +1,31 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+import { homeBuilderSchema } from "@/lib/schema";
+import { jsonLd } from "@/lib/utils";
 import "./globals.css";
 
 const description =
-  "King Style Homes designs and constructs custom homes that blend style, functionality, and exceptional craftsmanship.";
+  "King Style Homes designs and constructs custom homes, duplexes, granny flats and renovations across Western Sydney — blending style, functionality and exceptional craftsmanship.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kingstylehomes.com.au"),
-  title: "Home - King Style Homes",
-  description,
-  openGraph: {
-    title: "Home - King Style Homes",
+  ...buildMetadata({
+    path: "/",
+    title: "King Style Homes — Custom Home Builder, Western Sydney",
     description,
-    url: "/",
-    siteName: "King Style Homes",
-    images: [
-      {
-        url: "/kingstyle-home-hero.jpeg",
-        width: 1600,
-        height: 900,
-        alt: "King Style Homes custom home building",
-      },
+    keywords: [
+      "custom home builder western sydney",
+      "knockdown rebuild sydney",
+      "duplex builder western sydney",
+      "granny flat builder sydney",
+      "home designs western sydney",
+      "king style homes",
     ],
-    locale: "en_AU",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Home - King Style Homes",
-    description,
-    images: ["/kingstyle-home-hero.jpeg"],
-  },
+  }),
+  applicationName: "King Style Homes",
+  category: "Home Construction",
+  authors: [{ name: "King Style Homes" }],
+  creator: "King Style Homes",
+  publisher: "King Style Homes",
 };
 
 export default function RootLayout({
@@ -38,8 +34,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full scroll-smooth antialiased">
-      <body className="min-h-full bg-amali-dark text-white">{children}</body>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className="h-full scroll-smooth antialiased"
+    >
+      <body className="min-h-full bg-amali-dark text-white">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd(homeBuilderSchema()) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

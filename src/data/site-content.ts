@@ -582,3 +582,273 @@ export const pageImages = {
   inclusionsHero: `${KSH_UPLOADS}/2025/04/6.4.jpg`,
   contactHero: "/amali-villa-evening-entrance.jpeg",
 };
+
+// ============================================================================
+// PROGRAMMATIC SEO: SUBURBS
+// ============================================================================
+
+export type Suburb = {
+  slug: string;
+  name: string;
+  postcode: string;
+  lga: "The Hills" | "Blacktown";
+  highlight: string;
+  blurb: string;
+  popularDesignSlugs: string[];
+  image: string;
+};
+
+export const suburbs: Suburb[] = [
+  {
+    slug: "kellyville",
+    name: "Kellyville",
+    postcode: "2155",
+    lga: "The Hills",
+    highlight: "Established Hills District streets and new-release North Kellyville blocks.",
+    blurb:
+      "Kellyville mixes mature family streets with the rapidly growing North Kellyville release, where 9–14m frontages dominate. We handle the wider blocks with refined single-storey plans like Havenridge 18 and Kivo 18, and step up to premium five-bedroom doubles for clients building their forever home.",
+    popularDesignSlugs: ["havenridge-18", "kivo-18", "lume-31", "ember-37"],
+    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_05.jpg`,
+  },
+  {
+    slug: "castle-hill",
+    name: "Castle Hill",
+    postcode: "2154",
+    lga: "The Hills",
+    highlight: "Knockdown rebuilds and premium custom builds in the heart of the Hills.",
+    blurb:
+      "Castle Hill is overwhelmingly a knockdown-rebuild market — established blocks with strong land value where families want to stay in the catchment but rebuild for modern living. Wider frontages support generous single-storey and confident two-storey designs with premium street presence.",
+    popularDesignSlugs: ["lume-31", "ember-37", "havenridge-18", "noir-19"],
+    image: `${KSH_UPLOADS}/2025/02/DOUBLE-STORY_01.jpg`,
+  },
+  {
+    slug: "norwest",
+    name: "Norwest",
+    postcode: "2153",
+    lga: "The Hills",
+    highlight: "Contemporary builds for executive families near the Norwest Business Park.",
+    blurb:
+      "Norwest professionals expect contemporary, refined finishes and clean architectural lines. Lume 31 and Ember 37 suit the larger family demand; narrow-frontage doubles work for compact infill sites within walking distance of Norwest Metro.",
+    popularDesignSlugs: ["lume-31", "ember-37", "double-story-05"],
+    image: `${KSH_UPLOADS}/2025/02/DOUBLE-STORY_02.jpg`,
+  },
+  {
+    slug: "bella-vista",
+    name: "Bella Vista",
+    postcode: "2153",
+    lga: "The Hills",
+    highlight: "Polished family homes with strong street appeal.",
+    blurb:
+      "Bella Vista blocks support both knockdown rebuilds on established streets and new builds in the surrounding pockets. Clients here lean toward elegant facades, generous accommodation and refined inclusion packages that match the suburb's tone.",
+    popularDesignSlugs: ["lume-31", "noir-19", "havenridge-18"],
+    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_02.jpg`,
+  },
+  {
+    slug: "rouse-hill",
+    name: "Rouse Hill",
+    postcode: "2155",
+    lga: "The Hills",
+    highlight: "Family-focused homes across new estates and growing pockets.",
+    blurb:
+      "Rouse Hill suits families building around the school catchments and Rouse Hill Town Centre. We see a healthy mix of single-storey four and five-bed plans, plus double-storey designs for families wanting separation between living and retreat zones.",
+    popularDesignSlugs: ["havenridge-18", "kivo-18", "ember-37", "vista-15"],
+    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_03.jpg`,
+  },
+  {
+    slug: "box-hill",
+    name: "Box Hill",
+    postcode: "2765",
+    lga: "The Hills",
+    highlight: "New estate land releases with narrow-frontage builds.",
+    blurb:
+      "Box Hill is one of Sydney's fastest-growing release areas, with narrow 8.5–10m frontages typical of the new estates. Belford 23, Coastal 23 and Double Story 05 are our bread-and-butter here — designs built specifically for compact-frontage blocks without sacrificing room count.",
+    popularDesignSlugs: ["belford-23", "coastal-23", "double-story-05", "harmony-19"],
+    image: `${KSH_UPLOADS}/2025/02/DOUBLE-STORY_03.jpg`,
+  },
+  {
+    slug: "the-ponds",
+    name: "The Ponds",
+    postcode: "2769",
+    lga: "Blacktown",
+    highlight: "Established family streets with strong catchments.",
+    blurb:
+      "The Ponds is a mature growth-corridor suburb with sought-after public school catchments. Knockdown rebuilds are increasingly common; new-build clients lean toward four to five-bedroom designs with double garages and refined facades.",
+    popularDesignSlugs: ["havenridge-18", "kivo-18", "lume-31", "ember-37"],
+    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_04.jpg`,
+  },
+  {
+    slug: "stanhope-gardens",
+    name: "Stanhope Gardens",
+    postcode: "2768",
+    lga: "Blacktown",
+    highlight: "Family homes in a mature, walkable suburb.",
+    blurb:
+      "Stanhope Gardens combines established streets with proximity to Norwest, Bella Vista and Stanhope Village. Most projects are knockdown rebuilds — families staying in the area and building for the next 20 years. Single-storey four-bed plans and refined doubles both feature.",
+    popularDesignSlugs: ["single-story-04", "havenridge-18", "noir-19"],
+    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_01.jpg`,
+  },
+  {
+    slug: "quakers-hill",
+    name: "Quakers Hill",
+    postcode: "2763",
+    lga: "Blacktown",
+    highlight: "Affordable family builds and granny flat additions.",
+    blurb:
+      "Quakers Hill is one of the strongest knockdown-rebuild and secondary-dwelling markets in Western Sydney. Family-budget single-storey designs and granny flat builds drive most enquiries here.",
+    popularDesignSlugs: ["vista-15", "single-story-04", "harmony-19"],
+    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_01.jpg`,
+  },
+  {
+    slug: "schofields",
+    name: "Schofields",
+    postcode: "2762",
+    lga: "Blacktown",
+    highlight: "Narrow-frontage new-build estates with rail access.",
+    blurb:
+      "Schofields is dominated by new estate releases with narrow frontages (8.5–10m typical). Our narrow-frontage doubles — Belford 23, Coastal 23, Double Story 05 — are designed specifically for these blocks. Schofields rail station makes it a strong commuter pick.",
+    popularDesignSlugs: ["belford-23", "coastal-23", "double-story-05", "harmony-19"],
+    image: `${KSH_UPLOADS}/2025/02/DOUBLE-STORY_04.jpg`,
+  },
+  {
+    slug: "marsden-park",
+    name: "Marsden Park",
+    postcode: "2765",
+    lga: "Blacktown",
+    highlight: "Major release area with narrow-block family demand.",
+    blurb:
+      "Marsden Park is one of Western Sydney's largest active land-release areas. Most blocks are 8.5–12.5m frontage. We build everything from narrow-frontage doubles to wider single-storey family homes across the multiple estates here.",
+    popularDesignSlugs: ["double-story-05", "belford-23", "coastal-23", "vista-15"],
+    image: `${KSH_UPLOADS}/2025/02/DOUBLE-STORY_03-next.jpg`,
+  },
+  {
+    slug: "riverstone",
+    name: "Riverstone",
+    postcode: "2765",
+    lga: "Blacktown",
+    highlight: "Newer estate pockets alongside established streets.",
+    blurb:
+      "Riverstone mixes established streets, knockdown-rebuild opportunities and newer estate land. We see a healthy spread of single-storey four-bed family plans plus narrow-frontage doubles for the new release pockets.",
+    popularDesignSlugs: ["single-story-04", "belford-23", "vista-15"],
+    image: `${KSH_UPLOADS}/2025/02/SINGLE-STORY_04.jpg`,
+  },
+];
+
+// ============================================================================
+// PROGRAMMATIC SEO: DESIGN ARCHETYPES
+// ============================================================================
+
+export type DesignArchetype = {
+  slug: "single-storey" | "double-storey" | "narrow-lot" | "four-bedroom" | "five-bedroom";
+  name: string;
+  intro: string;
+  filter: (d: HomeDesign) => boolean;
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string[];
+};
+
+function frontageMetres(value: string): number {
+  const match = value.match(/[\d.]+/);
+  return match ? Number(match[0]) : Number.POSITIVE_INFINITY;
+}
+
+export const designArchetypes: DesignArchetype[] = [
+  {
+    slug: "single-storey",
+    name: "Single Storey Home Designs",
+    intro:
+      "Single-level homes built around easy circulation, generous bedroom counts and refined facades. Suited to families who want everything on one floor without sacrificing scale or finish.",
+    filter: (d) => d.category === "Single Storey",
+    seoTitle: "Single Storey Home Designs in Western Sydney | King Style Homes",
+    seoDescription:
+      "Explore King Style Homes' single storey design collection — four and five-bedroom plans built for Western Sydney families. Refined facades, generous accommodation, premium inclusions.",
+    seoKeywords: [
+      "single storey home designs",
+      "single storey homes sydney",
+      "single storey home builder western sydney",
+      "one storey home designs",
+    ],
+  },
+  {
+    slug: "double-storey",
+    name: "Double Storey Home Designs",
+    intro:
+      "Two-level homes with strong street presence and clear separation between living and retreat zones. From narrow-frontage doubles built for compact infill sites to expansive five-bedroom family homes.",
+    filter: (d) => d.category === "Double Storey",
+    seoTitle: "Double Storey Home Designs in Western Sydney | King Style Homes",
+    seoDescription:
+      "Browse King Style Homes' double storey designs — narrow-frontage compatible to premium five-bedroom plans, built for Western Sydney families.",
+    seoKeywords: [
+      "double storey home designs",
+      "two storey home designs sydney",
+      "double storey home builder western sydney",
+    ],
+  },
+  {
+    slug: "narrow-lot",
+    name: "Narrow Lot Home Designs",
+    intro:
+      "Designs purpose-built for tighter frontages — typical of Schofields, Box Hill and Marsden Park estate blocks. Generous family amenity on 8.5–9m frontage without compromising flow or storage.",
+    filter: (d) => frontageMetres(d.frontage) < 9,
+    seoTitle: "Narrow Lot Home Designs for Western Sydney | King Style Homes",
+    seoDescription:
+      "Narrow-frontage home designs (8.5m–9m) for Western Sydney's new-release estates. Compact-block solutions with full family amenity from King Style Homes.",
+    seoKeywords: [
+      "narrow lot home designs",
+      "narrow frontage homes sydney",
+      "narrow block home builder",
+      "8m frontage home designs",
+    ],
+  },
+  {
+    slug: "four-bedroom",
+    name: "4 Bedroom Home Designs",
+    intro:
+      "Four-bedroom plans suited to growing families — from compact single-storey footprints to expansive double-storey designs with dedicated retreat zones.",
+    filter: (d) => d.beds === 4,
+    seoTitle: "4 Bedroom Home Designs in Western Sydney | King Style Homes",
+    seoDescription:
+      "Four-bedroom home designs from King Style Homes — single and double storey options for Western Sydney families. Practical layouts, refined facades, premium inclusions.",
+    seoKeywords: [
+      "4 bedroom home designs",
+      "four bedroom homes sydney",
+      "4 bedroom home builder western sydney",
+    ],
+  },
+  {
+    slug: "five-bedroom",
+    name: "5 Bedroom Home Designs",
+    intro:
+      "Five-bedroom designs for larger families, multi-generational households or families who want a guest suite plus dedicated work-from-home space. Both single and double-storey options.",
+    filter: (d) => d.beds === 5,
+    seoTitle: "5 Bedroom Home Designs in Western Sydney | King Style Homes",
+    seoDescription:
+      "Five-bedroom home designs from King Style Homes — single and double storey plans for larger Western Sydney families.",
+    seoKeywords: [
+      "5 bedroom home designs",
+      "five bedroom homes sydney",
+      "large family home designs western sydney",
+    ],
+  },
+];
+
+// ============================================================================
+// HELPERS FOR PROGRAMMATIC ROUTES
+// ============================================================================
+
+export const getSuburb = (slug: string) => suburbs.find((s) => s.slug === slug);
+
+export const getDesignArchetype = (slug: string) =>
+  designArchetypes.find((a) => a.slug === slug);
+
+export const isDesignArchetypeSlug = (slug: string): boolean =>
+  designArchetypes.some((a) => a.slug === slug);
+
+export const getDesignsForSuburb = (suburb: Suburb): HomeDesign[] =>
+  suburb.popularDesignSlugs
+    .map((slug) => homeDesigns.find((d) => d.slug === slug))
+    .filter((d): d is HomeDesign => Boolean(d));
+
+export const getArchetypeDesigns = (archetype: DesignArchetype): HomeDesign[] =>
+  homeDesigns.filter((d) => d.category !== "Display Home" && archetype.filter(d));
+

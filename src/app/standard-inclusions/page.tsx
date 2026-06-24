@@ -2,8 +2,20 @@ import type { Metadata } from "next";
 import { InclusionsDownload } from "@/components/inclusions-download";
 import { InclusionList, InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { pageImages } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Standard Inclusions | King Style Homes" };
+export const metadata: Metadata = buildMetadata({
+  path: "/standard-inclusions",
+  title: "Standard Inclusions — What's Included | King Style Homes",
+  description:
+    "Standard inclusions from King Style Homes — plans, structural, interior finishes, bathrooms, electrical and warranties across every Western Sydney build.",
+  image: pageImages.inclusionsHero,
+  keywords: [
+    "standard inclusions home builder",
+    "home builder inclusions western sydney",
+    "king style standard inclusions",
+  ],
+});
 
 export default function StandardInclusionsPage() {
   return (

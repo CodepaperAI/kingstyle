@@ -1,8 +1,19 @@
 import type { Metadata } from "next";
 import { InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { contactDetails, pageImages } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Contact Us | King Style Homes" };
+export const metadata: Metadata = buildMetadata({
+  path: "/contact-us",
+  title: "Contact King Style Homes — Western Sydney Custom Home Builder",
+  description: `Talk to King Style Homes about your custom home, knockdown rebuild, duplex or granny flat. Call ${contactDetails.phone}, email ${contactDetails.email}, or visit our Sydney TCE display home.`,
+  image: pageImages.contactHero,
+  keywords: [
+    "contact king style homes",
+    "western sydney home builder contact",
+    "custom home consultation sydney",
+  ],
+});
 
 export default function ContactPage() {
   return (

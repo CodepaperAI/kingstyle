@@ -2,8 +2,19 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { homeDesigns } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Portfolio | King Style Homes" };
+export const metadata: Metadata = buildMetadata({
+  path: "/portfolio",
+  title: "Portfolio — Facade & Design Gallery | King Style Homes",
+  description:
+    "A visual portfolio of King Style Homes designs — facades, materials and finishes across single-storey, double-storey and narrow-frontage builds in Western Sydney.",
+  keywords: [
+    "king style homes portfolio",
+    "home builder portfolio western sydney",
+    "facade gallery sydney",
+  ],
+});
 
 export default function PortfolioPage() {
   return (

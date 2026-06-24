@@ -5,8 +5,21 @@ import { notFound } from "next/navigation";
 import { ArrowUpRight, Camera, CirclePlay } from "lucide-react";
 import { DesignStats, FaqList, InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { homeDesigns, pageImages } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Display Centers | King Style Homes" };
+export const metadata: Metadata = buildMetadata({
+  path: "/display-centers",
+  title: "Display Centres — Sydney TCE | King Style Homes",
+  description:
+    "Walk through the Sydney TCE display home — a finished King Style build that lets you experience the scale, finish quality and inclusions in person before you commit.",
+  image: pageImages.displayHero,
+  keywords: [
+    "display home western sydney",
+    "sydney tce display home",
+    "king style display centre",
+    "home builder display home",
+  ],
+});
 
 export default function DisplayCentersPage() {
   const displayHome = homeDesigns.find((item) => item.category === "Display Home");

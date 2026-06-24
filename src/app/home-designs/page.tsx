@@ -1,8 +1,21 @@
 import type { Metadata } from "next";
 import { DesignGrid, InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { homeDesigns } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Home Designs | King Style Homes" };
+export const metadata: Metadata = buildMetadata({
+  path: "/home-designs",
+  title: "Home Designs in Western Sydney | King Style Homes",
+  description:
+    "Browse King Style Homes' single-storey and double-storey designs — practical layouts, refined facades and premium inclusions, built for Western Sydney families.",
+  keywords: [
+    "home designs western sydney",
+    "single storey home designs",
+    "double storey home designs",
+    "narrow lot home designs",
+    "king style homes",
+  ],
+});
 
 export default function HomeDesignsPage() {
   const homeDesignListings = homeDesigns.filter((design) => design.category !== "Display Home");

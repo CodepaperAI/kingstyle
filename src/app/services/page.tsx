@@ -5,7 +5,22 @@ import { ArrowUpRight } from "lucide-react";
 import { InteriorHero, InteriorPage, SandSection, ServicesGrid } from "@/components/site-shell";
 import { capabilities, pageImages, servicePath, serviceSlug, services } from "@/data/site-content";
 
-export const metadata: Metadata = { title: "Services | King Style Homes" };
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  path: "/services",
+  title: "Services — Custom Builds, Knockdown Rebuild, Duplexes, Granny Flats | King Style Homes",
+  description:
+    "Custom home builds, knockdown & rebuild, duplexes, house & land packages, renovations and granny flats across Western Sydney by King Style Homes.",
+  keywords: [
+    "custom home builder western sydney",
+    "knockdown rebuild sydney",
+    "duplex builder sydney",
+    "granny flat builder sydney",
+    "renovations western sydney",
+    "house and land packages sydney",
+  ],
+});
 
 export default function ServicesPage() {
   const serviceAnchors = services.map((service) => ({

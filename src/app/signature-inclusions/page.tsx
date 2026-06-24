@@ -2,8 +2,20 @@ import type { Metadata } from "next";
 import { InclusionsDownload } from "@/components/inclusions-download";
 import { InclusionList, InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { pageImages } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Signature Inclusions | King Style Homes" };
+export const metadata: Metadata = buildMetadata({
+  path: "/signature-inclusions",
+  title: "Signature Inclusions — Premium Finish Pathway | King Style Homes",
+  description:
+    "Signature inclusions from King Style Homes — premium finishes, fixtures, structural details and warranties built into every Signature-tier build in Western Sydney.",
+  image: pageImages.inclusionsHero,
+  keywords: [
+    "signature inclusions",
+    "premium home inclusions western sydney",
+    "king style signature pathway",
+  ],
+});
 
 export default function SignatureInclusionsPage() {
   return (

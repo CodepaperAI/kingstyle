@@ -2,8 +2,21 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { pageImages, processSteps, testimonials, trustProofItems, whyBuildItems } from "@/data/site-content";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "About Us | King Style Homes" };
+export const metadata: Metadata = buildMetadata({
+  path: "/about-us",
+  title: "About King Style Homes — Custom Builders in Western Sydney",
+  description:
+    "King Style Homes is a Nirimba Fields-based custom home builder serving Western Sydney. Meet the team, the process and the proof points behind our craft-led approach.",
+  image: pageImages.aboutHero,
+  keywords: [
+    "about king style homes",
+    "custom home builder western sydney",
+    "nirimba fields home builder",
+    "western sydney builder",
+  ],
+});
 
 export default function AboutPage() {
   return (
