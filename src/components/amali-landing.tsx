@@ -28,6 +28,7 @@ import {
   testimonials,
   whyBuildItems,
 } from "@/data/site-content";
+import { submitLead } from "@/lib/lead-submit";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -367,22 +368,50 @@ function Header({ onRegister }: { onRegister: () => void }) {
   }, [open]);
 
   useEffect(() => {
-    const updateTheme = () => {
+    let rafId = 0;
+    let lastValue = false;
+    let locationsTop = 0;
+    let locationsBottom = 0;
+    let viewportTrigger = window.innerHeight * 0.94;
+
+    const measure = () => {
       const locations = document.getElementById("locations");
+      if (locations) {
+        locationsTop = locations.offsetTop;
+        locationsBottom = locationsTop + locations.offsetHeight;
+      } else {
+        locationsTop = 0;
+        locationsBottom = 0;
+      }
+      viewportTrigger = window.innerHeight * 0.94;
+    };
+
+    const compute = () => {
+      rafId = 0;
       const y = window.scrollY;
       const onMap =
-        locations &&
-        y >= locations.offsetTop - 80 &&
-        y <= locations.offsetTop + locations.offsetHeight - 80;
-
-      setOnLightSection(!onMap && y > window.innerHeight * 0.94);
+        locationsBottom > 0 && y >= locationsTop - 80 && y <= locationsBottom - 80;
+      const next = !onMap && y > viewportTrigger;
+      if (next !== lastValue) {
+        lastValue = next;
+        setOnLightSection(next);
+      }
     };
-    updateTheme();
-    window.addEventListener("scroll", updateTheme, { passive: true });
-    window.addEventListener("resize", updateTheme);
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(compute);
+    };
+
+    measure();
+    compute();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", measure);
     return () => {
-      window.removeEventListener("scroll", updateTheme);
-      window.removeEventListener("resize", updateTheme);
+      if (rafId) window.cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", measure);
     };
   }, []);
 
@@ -706,6 +735,8 @@ function HeroWaterCanvas({ image }: { image: string }) {
     let poolIndex = 0;
     let lastFlowAngle = 0;
     let idleWaveElapsed = 0;
+    let waterActive = true;
+    let scrollFrame = 0;
     let lastPointer: { x: number; y: number } | null = null;
     let lastRipple = { time: 0, x: 0, y: 0 };
 
@@ -726,6 +757,70 @@ function HeroWaterCanvas({ image }: { image: string }) {
     };
 
     let ripples: Ripple[] = [];
+
+    const clearRipples = () => {
+      ripples.forEach((ripple) => {
+        ripple.active = false;
+        ripple.map?.position.set(-9999, -9999);
+        ripple.map?.scale.set(0.001);
+        ripple.highlight?.position.set(-9999, -9999);
+        ripple.highlight?.scale.set(0.001);
+        ripple.highlight.alpha = 0;
+        ripple.filter.scale.x = 0;
+        ripple.filter.scale.y = 0;
+      });
+
+      if (imageLayer) {
+        imageLayer.filters = [];
+      }
+      activeFilterCount = 0;
+      host.classList.remove("is-rippling");
+    };
+
+    const setWaterActive = (active: boolean) => {
+      if (waterActive === active) return;
+      waterActive = active;
+
+      if (!active) {
+        clearRipples();
+        app?.ticker.stop();
+        return;
+      }
+
+      app?.ticker.start();
+    };
+
+    let sequenceEl: HTMLElement | null = null;
+    let sequenceTop = 0;
+    let sequenceDistance = 1;
+
+    const measureSequence = () => {
+      sequenceEl = host.closest<HTMLElement>(".hero-fly-sequence");
+      if (sequenceEl) {
+        sequenceTop = sequenceEl.offsetTop;
+        sequenceDistance = Math.max(1, sequenceEl.offsetHeight - window.innerHeight);
+      }
+    };
+
+    const updateWaterActivity = () => {
+      scrollFrame = 0;
+      if (!sequenceEl) {
+        setWaterActive(true);
+        return;
+      }
+
+      const progress = Math.min(
+        1,
+        Math.max(0, (window.scrollY - sequenceTop) / sequenceDistance),
+      );
+
+      setWaterActive(progress < 0.18);
+    };
+
+    const requestWaterActivityUpdate = () => {
+      if (scrollFrame) return;
+      scrollFrame = window.requestAnimationFrame(updateWaterActivity);
+    };
 
     const fitHeroSprite = () => {
       if (!host || !app || !heroSprite) return;
@@ -771,7 +866,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
       speed: number,
       angle: number,
     ) => {
-      if (!ripples.length) return;
+      if (!ripples.length || !waterActive) return;
 
       const ripple = ripples[poolIndex];
       poolIndex = (poolIndex + 1) % ripples.length;
@@ -807,6 +902,7 @@ function HeroWaterCanvas({ image }: { image: string }) {
     };
 
     const handlePointerMove = (event: PointerEvent) => {
+      if (!waterActive) return;
       if (event.pointerType === "touch") return;
 
       const rect = host.getBoundingClientRect();
@@ -940,6 +1036,10 @@ function HeroWaterCanvas({ image }: { image: string }) {
       heroSection?.classList.add("is-pixi-hero-ready");
 
       pixiApp.ticker.add((ticker) => {
+        if (!waterActive) {
+          return;
+        }
+
         let changedActiveState = false;
 
         const deltaMS = Math.min(ticker.deltaMS, 32);
@@ -1004,8 +1104,17 @@ function HeroWaterCanvas({ image }: { image: string }) {
       pixiApp.render();
       pixiApp.ticker.start();
 
-      resizeObserver = new ResizeObserver(fitHeroSprite);
+      resizeObserver = new ResizeObserver(() => {
+        fitHeroSprite();
+        measureSequence();
+      });
       resizeObserver.observe(host);
+      measureSequence();
+      updateWaterActivity();
+      window.addEventListener("scroll", requestWaterActivityUpdate, {
+        passive: true,
+      });
+      window.addEventListener("resize", measureSequence);
       window.addEventListener("pointermove", handlePointerMove, {
         passive: true,
       });
@@ -1019,7 +1128,12 @@ function HeroWaterCanvas({ image }: { image: string }) {
 
     return () => {
       cancelled = true;
+      if (scrollFrame) {
+        window.cancelAnimationFrame(scrollFrame);
+      }
       resizeObserver?.disconnect();
+      window.removeEventListener("scroll", requestWaterActivityUpdate);
+      window.removeEventListener("resize", measureSequence);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", handlePointerLeave);
       host.classList.remove("is-ready", "is-rippling");
@@ -1421,7 +1535,7 @@ function FlyThroughSection({
             playsInline
             autoPlay={false}
             loop
-            preload="auto"
+            preload="metadata"
             poster={HERO_IMAGE}
           >
             <source
@@ -1891,24 +2005,27 @@ function TeasersSection() {
                   alt={card.title}
                   fill
                   sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.12]"
+                  className="object-cover brightness-[0.72] saturate-[0.95] transition-transform duration-700 group-hover:scale-[1.12]"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/84" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,17,22,0.18)_0%,rgba(12,17,22,0.2)_35%,rgba(12,17,22,0.92)_100%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(12,17,22,0.62)_0%,rgba(12,17,22,0.22)_58%,rgba(12,17,22,0.36)_100%)]" />
               <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-7">
-                <p className="mb-3 text-[12px] font-light uppercase leading-none tracking-[1.5px] text-amali-sand/85">
-                  King Style Homes
-                </p>
-                <p className="text-[24px] font-light uppercase leading-[0.95] tracking-[0.8px] md:text-[30px] lg:text-[34px] lg:tracking-[1px]">
-                  {card.title}
-                </p>
-                <p className="font-body mt-4 max-w-[520px] text-[15px] leading-6 text-white/78 md:text-[16px]">
-                  {card.text}
-                </p>
-                <p className="mt-6 inline-flex items-center gap-3 text-[12px] uppercase tracking-[1.5px] text-white">
-                  Explore service
-                  <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </p>
+                <div className="max-w-[620px] rounded-[18px] border border-white/10 bg-amali-dark/34 p-4 shadow-[0_18px_42px_rgba(0,0,0,0.22)] backdrop-blur-[2px] md:p-5">
+                  <p className="mb-3 text-[11px] font-light uppercase leading-none tracking-[1.5px] text-amali-sand">
+                    King Style Homes
+                  </p>
+                  <p className="text-[23px] font-light uppercase leading-[0.98] tracking-[0.7px] [text-wrap:balance] md:text-[28px] lg:text-[31px] lg:tracking-[0.9px]">
+                    {card.title}
+                  </p>
+                  <p className="font-body mt-4 max-w-[540px] text-[15px] leading-6 text-white/88 md:text-[16px]">
+                    {card.text}
+                  </p>
+                  <p className="mt-5 inline-flex items-center gap-3 text-[12px] uppercase tracking-[1.5px] text-white">
+                    Explore service
+                    <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </p>
+                </div>
               </div>
             </Link>
           ))}
@@ -2160,10 +2277,12 @@ function RegisterModal({
 }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   const handleClose = useCallback(() => {
     setSubmitted(false);
+    setSubmitting(false);
     setError("");
     setEmail("");
     onClose();
@@ -2178,14 +2297,32 @@ function RegisterModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [handleClose, open]);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email)) {
       setError("Please enter a valid email address.");
       return;
     }
-    setSubmitted(true);
+
+    setSubmitting(true);
     setError("");
+
+    try {
+      await submitLead({
+        source: "Homepage free quote request",
+        email,
+        page: window.location.href,
+      });
+      setSubmitted(true);
+    } catch (leadError) {
+      setError(
+        leadError instanceof Error
+          ? leadError.message
+          : "Unable to send your quote request right now.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -2259,10 +2396,11 @@ function RegisterModal({
             ) : null}
             <button
               type="submit"
-              className="focus-ring mt-8 inline-flex items-center gap-5 overflow-hidden rounded-full bg-amali-dark py-3 pl-8 pr-3 text-white transition-transform hover:scale-[1.02]"
+              disabled={submitting}
+              className="focus-ring mt-8 inline-flex items-center gap-5 overflow-hidden rounded-full bg-amali-dark py-3 pl-8 pr-3 text-white transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
             >
               <span className="text-[13px] uppercase tracking-[1.4px]">
-                Request quote
+                {submitting ? "Sending..." : "Request quote"}
               </span>
               <span className="flex size-9 items-center justify-center rounded-full bg-amali-slate">
                 <ChevronRight aria-hidden className="size-4" />

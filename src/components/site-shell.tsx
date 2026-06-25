@@ -235,7 +235,7 @@ export function InteriorHero({
   eyebrow,
   title,
   intro,
-  image = "/hero-villa-screenshot.png",
+  image = "/hero-villa-screenshot.jpg",
 }: {
   eyebrow: string;
   title: string;
@@ -617,20 +617,23 @@ export function ServicesGrid() {
               src={service.image}
               alt={service.title}
               fill
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.08]"
+              className="object-cover brightness-[0.76] saturate-[0.95] transition-transform duration-700 group-hover:scale-[1.08]"
               sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-amali-dark/12 via-transparent to-amali-dark/72" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,17,22,0.16)_0%,rgba(12,17,22,0.22)_42%,rgba(12,17,22,0.9)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(12,17,22,0.5)_0%,rgba(12,17,22,0.14)_58%,rgba(12,17,22,0.28)_100%)]" />
             <div className="absolute left-6 top-6 rounded-full border border-white/30 bg-white/18 px-4 py-2 text-[11px] uppercase tracking-[1.4px] text-white backdrop-blur-md">
               {String(index + 1).padStart(2, "0")}
             </div>
             <div className="absolute bottom-6 left-6 right-6">
-              <p className="font-body text-[12px] uppercase tracking-[1.6px] text-amali-sand">
-                King Style Homes
-              </p>
-              <h2 className="mt-3 break-words text-[26px] font-light uppercase leading-[0.95] tracking-[0.7px] text-white sm:text-[30px]">
-                {service.title}
-              </h2>
+              <div className="rounded-[18px] border border-white/10 bg-amali-dark/32 p-4 shadow-[0_16px_38px_rgba(0,0,0,0.2)] backdrop-blur-[2px]">
+                <p className="font-body text-[12px] uppercase tracking-[1.6px] text-amali-sand">
+                  King Style Homes
+                </p>
+                <h2 className="mt-3 break-words text-[24px] font-light uppercase leading-[0.98] tracking-[0.7px] text-white [text-wrap:balance] sm:text-[28px]">
+                  {service.title}
+                </h2>
+              </div>
             </div>
           </div>
           <div className="flex min-h-[300px] flex-col p-7 md:p-8">

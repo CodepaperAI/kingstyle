@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ContactForm } from "@/components/contact-form";
 import { InteriorHero, InteriorPage, SandSection } from "@/components/site-shell";
 import { contactDetails, pageImages } from "@/data/site-content";
 import { buildMetadata } from "@/lib/seo";
@@ -41,29 +42,7 @@ export default function ContactPage() {
               ))}
             </div>
           </div>
-          <form className="grid gap-4 rounded-[34px] border border-amali-dark/10 bg-white p-6 shadow-[0_24px_90px_rgba(26,32,38,0.1)] md:p-9">
-            <div className="mb-4">
-              <p className="font-body text-[12px] uppercase tracking-[1.5px] text-amali-slate">
-                Start the conversation
-              </p>
-              <h2 className="mt-3 text-[32px] font-light uppercase leading-none">
-                Request a tailored consultation
-              </h2>
-            </div>
-            {["Name", "Email", "Phone", "Project type"].map((label) => (
-              <label key={label} className="font-body text-[13px] uppercase tracking-[1px]">
-                {label}
-                <input className="mt-2 h-14 w-full rounded-full border border-amali-dark/15 bg-amali-sand/35 px-5 outline-none transition-colors focus:border-amali-slate focus:bg-white" />
-              </label>
-            ))}
-            <label className="font-body text-[13px] uppercase tracking-[1px]">
-              Tell us about your project
-              <textarea className="mt-2 min-h-36 w-full rounded-3xl border border-amali-dark/15 bg-amali-sand/35 p-5 outline-none transition-colors focus:border-amali-slate focus:bg-white" />
-            </label>
-            <button type="button" className="mt-2 rounded-full bg-amali-dark px-6 py-4 text-[12px] uppercase tracking-[1.4px] text-white transition-transform hover:scale-[1.02]">
-              Request consultation
-            </button>
-          </form>
+          <ContactForm />
         </div>
       </SandSection>
     </InteriorPage>

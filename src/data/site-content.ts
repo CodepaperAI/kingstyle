@@ -280,7 +280,7 @@ export const services: Service[] = [
   {
     title: "Knockdown & Rebuild Duplex Projects",
     text: "Specialist guidance for duplex and multi-dwelling projects, from site review through planning, approvals and construction.",
-    image: "/amali-villa-evening-entrance.jpeg",
+    image: `${KSH_UPLOADS}/2025/04/Duplex.jpg`,
     details: ["Knockdown rebuild planning", "Multi-dwelling guidance", "Development-focused delivery"],
     bestFor: "Owners who want to unlock more value from a block through a carefully planned multi-dwelling outcome.",
     included: ["Site potential review", "Dwelling mix and layout guidance", "Approval and compliance coordination", "Build delivery planning"],
@@ -290,7 +290,7 @@ export const services: Service[] = [
   {
     title: "Project Management & Overseas Procurement",
     text: "End-to-end project management support, including planning, procurement, supplier coordination, logistics, installation and turnkey delivery.",
-    image: "/display-centers/16-3OCT2024-6-43-r.jpg",
+    image: "/display-centers/06-3OCT2024-6-8-r.jpg",
     details: ["Project planning", "Procurement coordination", "Turnkey delivery"],
     bestFor: "Clients who want procurement, finishes and project delivery coordinated through one accountable pathway.",
     included: ["Planning and procurement support", "Supplier coordination", "Logistics and installation guidance", "Handover preparation"],
@@ -851,4 +851,3 @@ export const getDesignsForSuburb = (suburb: Suburb): HomeDesign[] =>
 
 export const getArchetypeDesigns = (archetype: DesignArchetype): HomeDesign[] =>
   homeDesigns.filter((d) => d.category !== "Display Home" && archetype.filter(d));
-
