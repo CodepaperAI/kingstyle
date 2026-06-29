@@ -27,6 +27,8 @@ const navigation = [
   ["Contact Us", "/contact-us"],
 ] as const;
 
+const footerNavigation = [...navigation, ["Blog", "/blog"]] as const;
+
 const inclusionLinks = [
   ["Standard Inclusions", "/standard-inclusions"],
   ["Signature Inclusions", "/signature-inclusions"],
@@ -310,7 +312,7 @@ export function InteriorFooter() {
           </p>
         </div>
         <div className="grid grid-cols-2 gap-5 text-[12px] uppercase tracking-[1.2px]">
-          {navigation.map(([label, href]) => (
+          {footerNavigation.map(([label, href]) => (
             <Link key={href} href={href} className="border-b border-white/15 py-3">
               {label}
             </Link>

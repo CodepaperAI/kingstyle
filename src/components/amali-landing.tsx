@@ -2219,6 +2219,7 @@ function SiteFooter({ onRegister }: { onRegister: () => void }) {
             <div>
               {[
                 ["About Us", "/about-us"],
+                ["Blog", "/blog"],
                 ["Get In Touch", "/contact-us"],
               ].map(([label, href]) => (
                 <a
