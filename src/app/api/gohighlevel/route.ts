@@ -67,8 +67,9 @@ export async function POST(request: Request) {
     cache: "no-store",
   });
 
+  const upstreamBody = await response.text().catch(() => "");
+
   if (!response.ok) {
-    const upstreamBody = await response.text().catch(() => "");
     console.error("GHL webhook rejected lead", {
       status: response.status,
       statusText: response.statusText,
@@ -80,6 +81,13 @@ export async function POST(request: Request) {
       { status: 502 },
     );
   }
+
+  console.log("GHL webhook accepted lead", {
+    status: response.status,
+    body: upstreamBody.slice(0, 500),
+    email: goHighLevelPayload.email,
+    source: goHighLevelPayload.source,
+  });
 
   return Response.json({ ok: true, submittedAt });
 }
