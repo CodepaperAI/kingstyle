@@ -4,12 +4,14 @@ import { FormEvent, useMemo, useState } from "react";
 import Image from "next/image";
 import { ArrowDownToLine, Check, X } from "lucide-react";
 import { inclusionFeatureItems, inclusionGroups } from "@/data/site-content";
+import { submitLead } from "@/lib/lead-submit";
 
 type DownloadVariant = "standard" | "signature";
 
 export function InclusionsDownload({ variant }: { variant: DownloadVariant }) {
   const [open, setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const title = variant === "signature" ? "Signature Inclusions" : "Standard Inclusions";
@@ -49,7 +51,7 @@ export function InclusionsDownload({ variant }: { variant: DownloadVariant }) {
     window.setTimeout(() => URL.revokeObjectURL(url), 500);
   }
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!form.name.trim()) {
@@ -62,15 +64,36 @@ export function InclusionsDownload({ variant }: { variant: DownloadVariant }) {
       return;
     }
 
+    setSubmitting(true);
     setError("");
-    setSubmitted(true);
-    downloadFile();
+
+    try {
+      await submitLead({
+        source: `${title} download`,
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        variant,
+        page: window.location.href,
+      });
+      setSubmitted(true);
+      downloadFile();
+    } catch (leadError) {
+      setError(
+        leadError instanceof Error
+          ? leadError.message
+          : "Unable to send your details right now.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function close() {
     setOpen(false);
     window.setTimeout(() => {
       setSubmitted(false);
+      setSubmitting(false);
       setError("");
     }, 250);
   }
@@ -222,9 +245,10 @@ export function InclusionsDownload({ variant }: { variant: DownloadVariant }) {
                 {error ? <p className="font-body text-sm text-red-700">{error}</p> : null}
                 <button
                   type="submit"
-                  className="mt-3 inline-flex items-center justify-center gap-3 rounded-full bg-amali-dark px-6 py-4 text-[12px] uppercase tracking-[1.3px] text-white"
+                  disabled={submitting}
+                  className="mt-3 inline-flex items-center justify-center gap-3 rounded-full bg-amali-dark px-6 py-4 text-[12px] uppercase tracking-[1.3px] text-white disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Submit and download
+                  {submitting ? "Sending..." : "Submit and download"}
                   <ArrowDownToLine className="size-4" strokeWidth={1.6} />
                 </button>
               </form>
