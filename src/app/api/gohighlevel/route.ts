@@ -68,6 +68,13 @@ export async function POST(request: Request) {
   });
 
   if (!response.ok) {
+    const upstreamBody = await response.text().catch(() => "");
+    console.error("GHL webhook rejected lead", {
+      status: response.status,
+      statusText: response.statusText,
+      body: upstreamBody.slice(0, 500),
+      payload: goHighLevelPayload,
+    });
     return Response.json(
       { error: "Unable to send your enquiry right now." },
       { status: 502 },
